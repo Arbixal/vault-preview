@@ -159,7 +159,7 @@ export default async function Home() {
     <main className="flex flex-col items-center justify-between space-y-5 p-5">
       <h1>Great Vault Preview</h1>
       {characters.map(x => (
-        <CharacterPanel character={x} data={data[x.name]} />
+        <CharacterPanel key={x.name} character={x} data={data[x.name]} />
       ))}
     </main>
   );

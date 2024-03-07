@@ -81,8 +81,8 @@ export default function MythicPlusPanel({data}: MythicPlusPanelProps) {
 
             </div>
             <div className="grid grid-cols-9 gap-1 mt-2">
-                {extraRuns.map(x => (
-                    <DungeonRun ilevel={levelToILevel(x.level)} label={levelToLabel(x.level)} />
+                {extraRuns.map((x, ix) => (
+                    <DungeonRun key={ix} ilevel={levelToILevel(x.level)} label={levelToLabel(x.level)} />
                 ))}
             </div>
         </div>
