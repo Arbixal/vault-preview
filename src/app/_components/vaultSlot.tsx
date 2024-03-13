@@ -1,8 +1,12 @@
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 interface VaultSlotProps {
     ilevel: number;
+    loading: boolean;
 }
 
-export default function VaultSlot({ilevel}: VaultSlotProps) {
+export default function VaultSlot({ilevel, loading}: VaultSlotProps) {
     var textClass = 'text-poor';
     var borderClass = 'border-poor';
 
@@ -21,8 +25,11 @@ export default function VaultSlot({ilevel}: VaultSlotProps) {
     }
 
     return (
-        <div className={`w-32 h-16 border rounded text-3xl bg-neutral-950 ${textClass} ${borderClass}`}>
-            <div className="mt-3">{ilevel > 0 ? ilevel : '-'}</div>
+        <div className={`relative w-32 h-16 border rounded text-3xl bg-neutral-950 bg-great-vault bg-cover ${textClass} ${borderClass}`}>
+            <div className="absolute inset-0 align-middle bg-black/60 p-3" >
+                {loading && <FontAwesomeIcon icon={faSpinner} className='fa-lg fa-spin' />}
+                {ilevel > 0 ? ilevel : ''}
+            </div>
         </div>
     )
 }

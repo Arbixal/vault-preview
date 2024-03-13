@@ -3,6 +3,7 @@ import VaultSlot from "./vaultSlot";
 
 interface MythicPlusPanelProps {
     data: DungeonData;
+    loading: boolean;
 }
 
 export type DungeonData = DungeonRun[];
@@ -41,7 +42,7 @@ function levelToLabel(level: number) {
     return level > 0 ? level.toString() : '-';
 }
 
-export default function MythicPlusPanel({data}: MythicPlusPanelProps) {
+export default function MythicPlusPanel({data, loading}: MythicPlusPanelProps) {
     var sortedRuns = [...(data ?? []).sort((a, b) => b.level - a.level)];
 
     // Ensure there are 8 runs
@@ -55,13 +56,13 @@ export default function MythicPlusPanel({data}: MythicPlusPanelProps) {
         <div className="flex-col ml-5">
             <div className="grid grid-cols-3 gap-2">
                 <div className="flex-col">
-                    <VaultSlot ilevel={levelToILevel(sortedRuns[0].level)} />
+                    <VaultSlot ilevel={levelToILevel(sortedRuns[0].level)} loading={loading} />
                     <div className="grid grid-cols-1 gap-1 mt-2">
                         <DungeonRun ilevel={levelToILevel(sortedRuns[0].level)} label={levelToLabel(sortedRuns[0].level)} />
                     </div>
                 </div>
                 <div className="flex-col">
-                    <VaultSlot ilevel={levelToILevel(sortedRuns[3].level)} />
+                    <VaultSlot ilevel={levelToILevel(sortedRuns[3].level)} loading={loading} />
                     <div className="grid grid-cols-3 gap-1 mt-2">
                         <DungeonRun ilevel={levelToILevel(sortedRuns[1].level)} label={levelToLabel(sortedRuns[1].level)} />
                         <DungeonRun ilevel={levelToILevel(sortedRuns[2].level)} label={levelToLabel(sortedRuns[2].level)} />
@@ -69,7 +70,7 @@ export default function MythicPlusPanel({data}: MythicPlusPanelProps) {
                     </div>
                 </div>
                 <div className="flex-col">
-                    <VaultSlot ilevel={levelToILevel(sortedRuns[7].level)} />
+                    <VaultSlot ilevel={levelToILevel(sortedRuns[7].level)} loading={loading} />
                     <div className="grid grid-cols-4 gap-1 mt-2">
                         <DungeonRun ilevel={levelToILevel(sortedRuns[4].level)} label={levelToLabel(sortedRuns[4].level)} />
                         <DungeonRun ilevel={levelToILevel(sortedRuns[5].level)} label={levelToLabel(sortedRuns[5].level)} />
