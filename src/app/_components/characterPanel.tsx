@@ -20,7 +20,7 @@ export interface CharacterData {
 
 export default function CharacterPanel({character} : ICharacterPanelProps)
 {
-  const dataUrl = `https://devapi.bixnpieces.com/vault-progress/${character.region}/${character.realm}/${character.name}`;
+  const dataUrl = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/vault-progress/${character.region}/${character.realm}/${character.name}`;
   const {data, error, isLoading} = useSWR(dataUrl, (url) => fetch(url).then((res) => res.json()));
  
   const characterData = data?.[`${character.name}-${character.realm}`]
