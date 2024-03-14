@@ -53,7 +53,7 @@ export default function MythicPlusPanel({data, loading}: MythicPlusPanelProps) {
     const extraRuns = sortedRuns.length > 8 ? sortedRuns.slice(8) : [];
 
     return (
-        <div className="flex-col ml-5">
+        <div className="flex-col mt-5">
             <div className="grid grid-cols-3 gap-2">
                 <div className="flex-col">
                     <VaultSlot ilevel={levelToILevel(sortedRuns[0].level)} loading={loading} />

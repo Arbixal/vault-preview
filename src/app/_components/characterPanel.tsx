@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import MythicPlusPanel, { DungeonData } from "./mythicPlusPanel";
 import RaidPanel, { RaidData } from "./raidPanel";
+import MessagePanel from "./messagePanel";
 
 interface ICharacterPanelProps {
     character: Character;
@@ -10,7 +11,6 @@ export interface Character {
     region: string;
     name: string;
     realm: string;
-    player_class: string;
 }
 
 export interface CharacterData {
@@ -41,14 +41,14 @@ export default function CharacterPanel({character} : ICharacterPanelProps)
   );
 
   if (error) {
-    childElements = <div>An error occured while loading data for this character.</div>
+    childElements = <MessagePanel message={"An error occured while loading data for this character."} />
   }
 
     return (
-        <div className={`flex font-sans border rounded p-2 bg-${classColour}/15 border-${classColour}`}>
+        <div className={`flex font-sans border rounded max-w-fit m-3 p-2 bg-${classColour}/15 border-${classColour}`}>
           <div className="flex-auto">
             <h1 className={`text-lg font-semibold capitalize text-${classColour}`}>{character.name} <span className={`text-sm text-${classColour}/50`}>{character.realm}</span></h1>
-            <div className="flex text-center">
+            <div className="flex-col text-center">
               {childElements}
             </div>
           </div>
