@@ -68,8 +68,8 @@ export default function Home() {
       </form>
       <div className="flex flex-wrap justify-center">
       {characters.map(x => (
-        <div className="relative">
-          <CharacterPanel key={`${x.name}-${x.realm}`} character={x} />
+        <div key={`${x.name}-${x.realm}`} className="relative">
+          <CharacterPanel character={x} />
           <FontAwesomeIcon icon={faXmark} className="fa-solid absolute top-5 right-5 cursor-pointer hover:text-red-500" onClick={() => handleRemove(x.realm, x.name)} />
         </div>
       ))}
