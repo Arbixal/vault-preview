@@ -22,6 +22,6 @@ export default function DungeonRun({ilevel, label}: DungeonRunProps) {
     }
 
     return (
-        <div className={`border rounded bg-neutral-950 ${textClass} ${borderClass}`}>{label}</div>
+        <div className={`border rounded bg-neutral-950 container ${textClass} ${borderClass}`}>{label}</div>
     )
 }
