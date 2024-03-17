@@ -25,8 +25,8 @@ export default function VaultSlot({ilevel, loading}: VaultSlotProps) {
     }
 
     return (
-        <div className={`relative w-32 h-16 border rounded text-3xl bg-neutral-950 bg-great-vault bg-cover ${textClass} ${borderClass}`}>
-            <div className="absolute inset-0 align-middle bg-black/60 p-3" >
+        <div className={`relative w-24 sm:w-32 h-12 sm:h-16 border rounded text-2xl sm:text-3xl bg-neutral-950 bg-great-vault bg-cover ${textClass} ${borderClass}`}>
+            <div className="absolute inset-0 align-middle bg-black/60 p-1.5 sm:p-3" >
                 {loading && <FontAwesomeIcon icon={faSpinner} className='fa-lg fa-spin' />}
                 {ilevel > 0 ? ilevel : ''}
             </div>

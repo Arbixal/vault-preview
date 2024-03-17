@@ -45,7 +45,7 @@ export default function CharacterPanel({character} : ICharacterPanelProps)
   }
 
     return (
-        <div className={`flex font-sans border rounded max-w-fit m-3 p-2 bg-${classColour}/15 border-${classColour}`}>
+        <div className={`flex font-sans border rounded max-w-fit p-2 bg-${classColour}/15 border-${classColour}`}>
           <div className="flex-auto">
             <h1 className={`text-lg font-semibold capitalize text-${classColour}`}>{character.name} <span className={`text-sm text-${classColour}/50`}>{character.realm}</span></h1>
             <div className="flex-col text-center">

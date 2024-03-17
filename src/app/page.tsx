@@ -39,13 +39,13 @@ export default function Home() {
   const [characters, setCharacters] = useState(getCharacters());
 
   return (
-    <main className="flex flex-col items-center p-5">
+    <main className="flex flex-col items-center p-3 md:p-5">
       <h1 className="text-2xl">Great Vault Preview</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="flex gap-3 mt-3 mb-3">
+      <form className="w-full max-w-md md:w-fit md:max-w-fit" onSubmit={handleSubmit}>
+        <div className="flex flex-col md:flex-row gap-3 mt-3 mb-3">
             <div className="flex flex-col">
                 <label className="text-sm">Region</label>
-                <select className="bg-neutral-700" name="region" onChange={(e) => setRegion(e.target.value)}>
+                <select className="bg-neutral-700 p-1 sm:p-2" name="region" onChange={(e) => setRegion(e.target.value)}>
                     <option value="us">US</option>
                     <option value="eu">EU</option>
                     <option value="kr">KR</option>
@@ -54,19 +54,19 @@ export default function Home() {
             </div>
             <div className="flex flex-col">
                 <label className="text-sm">Realm</label>
-                <input className="bg-neutral-700" type="text" onChange={(e) => setRealm(e.target.value)} />
+                <input className="bg-neutral-700 p-1 sm:p-2" type="text" onChange={(e) => setRealm(e.target.value)} />
             </div>
             <div className="flex flex-col">
                 <label className="text-sm">Character</label>
-                <input className="bg-neutral-700" type="text" onChange={(e) => setName(e.target.value)} />
+                <input className="bg-neutral-700 p-1 sm:p-2" type="text" onChange={(e) => setName(e.target.value)} />
             </div>
             <div className="flex flex-col">
-                <label className="text-sm">&nbsp;</label>
-                <button className="hover:bg-neutral-700 pl-1 pr-1" type="submit">Add</button>
+                <label className="text-sm hidden md:block">&nbsp;</label>
+                <button className="hover:bg-neutral-700 p-1 sm:pt-2 sm:pb-2 sm:pl-4 sm:pr-4" type="submit">Add</button>
             </div>
         </div>
       </form>
-      <div className="flex flex-wrap justify-center">
+      <div className="flex flex-wrap justify-center gap-3">
       {characters.map(x => (
         <div key={`${x.name}-${x.realm}`} className="relative">
           <CharacterPanel character={x} />
