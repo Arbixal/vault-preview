@@ -15,26 +15,16 @@ type DungeonRun = {
 }
 
 function levelToILevel(level: number) {
-    if (level >= 20)
-        return 483;
-    else if (level >= 18)
-        return 480;
-    else if (level >= 15)
-        return 476;
-    else if (level >= 12)
-        return 473;
-    else if (level >= 10)
-        return 470;
+    if (level >= 10)
+        return 522;
     else if (level >= 8)
-        return 467;
+        return 519;
     else if (level >= 6)
-        return 463;
+        return 515;
     else if (level >= 4)
-        return 460;
-    else if (level >= 3)
-        return 457;
+        return 512;
     else if (level >= 2)
-        return 454;
+        return 509;
     else
         return -1;
 }

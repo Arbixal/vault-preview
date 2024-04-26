@@ -7,16 +7,16 @@ export default function DungeonRun({ilevel, label}: DungeonRunProps) {
     var textClass = 'text-poor';
     var borderClass = 'border-poor';
 
-    if (ilevel >= 480) {
+    if (ilevel >= 519) {
         textClass = 'text-legendary';
         borderClass = 'border-legendary';
-    } else if (ilevel >= 467) {
+    } else if (ilevel >= 506) {
         textClass = 'text-epic';
         borderClass = 'border-epic';
-    } else if (ilevel >= 454) {
+    } else if (ilevel >= 493) {
         textClass = 'text-rare';
         borderClass = 'border-rare';
-    } else if (ilevel >= 441) {
+    } else if (ilevel >= 480) {
         textClass = 'text-uncommon';
         borderClass = 'border-uncommon';
     }

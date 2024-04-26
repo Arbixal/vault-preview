@@ -29,13 +29,13 @@ function bossDataToILevel(bossData: BossData | undefined) {
         return -1;
 
     if (bossData.mythic)
-        return 480;
+        return 519;
     else if (bossData.heroic)
-        return 467;
+        return 506;
     else if (bossData.normal)
-        return 454;
+        return 493;
     else if (bossData.lfr)
-        return 441;
+        return 480;
 
     return -1;
 }
@@ -59,13 +59,34 @@ export default function RaidPanel({ data, loading }: RaidPanelProps) {
     bosses.push({ label: 'I', ilvl: bossDataToILevel(data?.['igira-the-cruel']), tooltip: getBossTooltip("Igira the Cruel", data?.['igira-the-cruel'])});
     bosses.push({ label: 'V', ilvl: bossDataToILevel(data?.['volcoross']), tooltip: getBossTooltip("Volcoross", data?.['volcoross'])});
     bosses.push({ label: 'L', ilvl: bossDataToILevel(data?.['larodar']), tooltip: getBossTooltip("Larodar, Keeper of the Flame", data?.['larodar'])});
-    bosses.push({ label: 'C', ilvl: bossDataToILevel(data?.['council-of-dreams']), tooltip: getBossTooltip("Council of Dreams", data?.['council-of-dreams'])});
+    bosses.push({ label: 'CoD', ilvl: bossDataToILevel(data?.['council-of-dreams']), tooltip: getBossTooltip("Council of Dreams", data?.['council-of-dreams'])});
     bosses.push({ label: 'N', ilvl: bossDataToILevel(data?.['nymue']), tooltip: getBossTooltip("Nymue, Weaver of the Cycle", data?.['nymue'])});
     bosses.push({ label: 'S', ilvl: bossDataToILevel(data?.['smolderon']), tooltip: getBossTooltip("Smolderon", data?.['smolderon'])});
-    bosses.push({ label: 'T', ilvl: bossDataToILevel(data?.['tindral-sageswift']), tooltip: getBossTooltip("Tindral Sageswift", data?.['tindral-sageswift'])});
+    bosses.push({ label: 'TS', ilvl: bossDataToILevel(data?.['tindral-sageswift']), tooltip: getBossTooltip("Tindral Sageswift", data?.['tindral-sageswift'])});
     bosses.push({ label: 'F', ilvl: bossDataToILevel(data?.['fyrakk-the-blazing']), tooltip: getBossTooltip("Fyrakk the Blazing", data?.['fyrakk-the-blazing'])});
 
+    bosses.push({ label: 'E', ilvl: bossDataToILevel(data?.['eranog']), tooltip: getBossTooltip("Eranog", data?.['eranog'])});
+    bosses.push({ label: 'T', ilvl: bossDataToILevel(data?.['terros']), tooltip: getBossTooltip("Terros", data?.['terros'])});
+    bosses.push({ label: 'PC', ilvl: bossDataToILevel(data?.['the-primal-council']), tooltip: getBossTooltip("The Primal Council", data?.['the-primal-council'])});
+    bosses.push({ label: 'SCB', ilvl: bossDataToILevel(data?.['sennarth']), tooltip: getBossTooltip("Sennarth, the Cold Breath", data?.['sennarth'])});
+    bosses.push({ label: 'D', ilvl: bossDataToILevel(data?.['dathea']), tooltip: getBossTooltip("Dathea, Ascended", data?.['dathea'])});
+    bosses.push({ label: 'KG', ilvl: bossDataToILevel(data?.['kurog-grimtotem']), tooltip: getBossTooltip("Kurog Grimtotem", data?.['kurog-grimtotem'])});
+    bosses.push({ label: 'BD', ilvl: bossDataToILevel(data?.['broodkeeper-diurna']), tooltip: getBossTooltip("Broodkeeper Diurna", data?.['broodkeeper-diurna'])});
+    bosses.push({ label: 'R', ilvl: bossDataToILevel(data?.['raszageth-the-storm-eater']), tooltip: getBossTooltip("Raszageth the Storm Eater", data?.['raszageth-the-storm-eater'])});
+
+    bosses.push({ label: 'K', ilvl: bossDataToILevel(data?.['kazzara']), tooltip: getBossTooltip("Kazzara, the Hellforged", data?.['kazzara'])});
+    bosses.push({ label: 'AC', ilvl: bossDataToILevel(data?.['the-amalgamation-chamber']), tooltip: getBossTooltip("The Amalgamation Chamber", data?.['the-amalgamation-chamber'])});
+    bosses.push({ label: 'FE', ilvl: bossDataToILevel(data?.['the-forgotten-experiments']), tooltip: getBossTooltip("The Forgotten Experiments", data?.['the-forgotten-experiments'])});
+    bosses.push({ label: 'AotZ', ilvl: bossDataToILevel(data?.['assault-of-the-zaqali']), tooltip: getBossTooltip("Assault of the Zaqali", data?.['assault-of-the-zaqali'])});
+    bosses.push({ label: 'RtE', ilvl: bossDataToILevel(data?.['rashok']), tooltip: getBossTooltip("Rashok, the Elder", data?.['rashok'])});
+    bosses.push({ label: 'Z', ilvl: bossDataToILevel(data?.['the-vigilant-steward']), tooltip: getBossTooltip("The Vigilant Steward, Zskarn", data?.['the-vigilant-steward'])});
+    bosses.push({ label: 'M', ilvl: bossDataToILevel(data?.['magmorax']), tooltip: getBossTooltip("Magmorax", data?.['magmorax'])});
+    bosses.push({ label: 'EN', ilvl: bossDataToILevel(data?.['echo-of-neltharion']), tooltip: getBossTooltip("Echo of Neltharion", data?.['echo-of-neltharion'])});
+    bosses.push({ label: 'SS', ilvl: bossDataToILevel(data?.['scalecommander-sarkareth']), tooltip: getBossTooltip("Scalecommander Sarkareth", data?.['scalecommander-sarkareth'])});
+
     const sortedBosses = [...bosses.sort((a, b) => b.ilvl - a.ilvl)];
+
+    const extraBosses = sortedBosses.length > 7 ? sortedBosses.slice(7) : [];
 
     return (
         <div className="flex-col">
@@ -108,12 +129,11 @@ export default function RaidPanel({ data, loading }: RaidPanelProps) {
                 </div>
             </div>
             <div className="grid grid-cols-9 gap-1 mt-2">
-                <Tooltip message={sortedBosses[7].tooltip}>
-                    <DungeonRun ilevel={sortedBosses[7].ilvl} label={sortedBosses[7].label} />
+                {extraBosses.map((x, ix) => (
+                <Tooltip key={ix} message={x.tooltip}>
+                    <DungeonRun ilevel={x.ilvl} label={x.label} />
                 </Tooltip>
-                <Tooltip message={sortedBosses[8].tooltip}>
-                    <DungeonRun ilevel={sortedBosses[8].ilvl} label={sortedBosses[8].label} />
-                </Tooltip>
+                ))}
             </div>
         </div>
     );
