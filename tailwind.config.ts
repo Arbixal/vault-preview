@@ -88,6 +88,11 @@ const config: Config = {
     'text-warrior/50',
     'border-warrior',
     'bg-warrior/15',
+    'border-legendary',
+    'border-epic',
+    'border-rare',
+    'border-uncommon',
+    'border-poor',
   ]
 };
 export default config;
