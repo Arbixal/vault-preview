@@ -98,13 +98,18 @@ export default function RaidPanel({ data, season, loading }: RaidPanelProps) {
 
     const sortedBosses = [...bosses.sort((a, b) => b.ilvl - a.ilvl)];
 
+    // Ensure there are 6 bosses
+    for (var i = sortedBosses.length; i < 7; ++i) {
+        sortedBosses.push({ ilvl: -1, label: '', tooltip: ''});
+    }
+
     const extraBosses = sortedBosses.length > 7 ? sortedBosses.slice(7) : [];
 
     return (
         <div className="flex-col">
             <div className="grid grid-cols-3 gap-2">
                 <div className="flex-col">
-                    <VaultSlot ilevel={sortedBosses[1].ilvl} loading={loading} />
+                    <VaultSlot ilevel={sortedBosses[1].ilvl} loading={loading} season={season} />
                     <div className="grid grid-cols-2 gap-1 mt-2">
                         <Tooltip message={sortedBosses[0].tooltip}>
                             <DungeonRun ilevel={sortedBosses[0].ilvl} label={sortedBosses[0].label} season={season} />
@@ -115,7 +120,7 @@ export default function RaidPanel({ data, season, loading }: RaidPanelProps) {
                     </div>
                 </div>
                 <div className="flex-col">
-                    <VaultSlot ilevel={sortedBosses[3].ilvl} loading={loading} />
+                    <VaultSlot ilevel={sortedBosses[3].ilvl} loading={loading} season={season} />
                     <div className="grid grid-cols-2 gap-1 mt-2">
                         <Tooltip message={sortedBosses[2].tooltip}>
                             <DungeonRun ilevel={sortedBosses[2].ilvl} label={sortedBosses[2].label} season={season} />
@@ -126,7 +131,7 @@ export default function RaidPanel({ data, season, loading }: RaidPanelProps) {
                     </div>
                 </div>
                 <div className="flex-col">
-                    <VaultSlot ilevel={sortedBosses[6].ilvl} loading={loading} />
+                    <VaultSlot ilevel={sortedBosses[6].ilvl} loading={loading} season={season} />
                     <div className="grid grid-cols-3 gap-1 mt-2">
                         <Tooltip message={sortedBosses[4].tooltip}>
                             <DungeonRun ilevel={sortedBosses[4].ilvl} label={sortedBosses[4].label} season={season} />

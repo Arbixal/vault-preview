@@ -39,10 +39,12 @@ export function levelToILevel(level: number, season: number | undefined) {
 
     var levels = MPLUS_LEVELS[season] ?? []
 
-    levels.forEach(([breakpoint, ilvl]) => {
+    for (var i = 0; i < levels.length; ++i) {
+        let [breakpoint, ilvl] = levels[i];
+
         if (level >= breakpoint)
             return ilvl;
-    })
+    }
 
     return -1;
 }

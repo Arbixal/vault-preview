@@ -34,7 +34,7 @@ export default function MythicPlusPanel({data, season, loading}: MythicPlusPanel
         <div className="flex-col mt-5">
             <div className="grid grid-cols-3 gap-2">
                 <div className="flex-col">
-                    <VaultSlot ilevel={levelToILevel(sortedRuns[0].level, season)} loading={loading} />
+                    <VaultSlot ilevel={levelToILevel(sortedRuns[0].level, season)} loading={loading} season={season} />
                     <div className="grid grid-cols-1 gap-1 mt-2">
                         <Tooltip message={sortedRuns[0].name}>
                             <DungeonRun ilevel={levelToILevel(sortedRuns[0].level, season)} label={levelToLabel(sortedRuns[0].level)} season={season} />
@@ -42,7 +42,7 @@ export default function MythicPlusPanel({data, season, loading}: MythicPlusPanel
                     </div>
                 </div>
                 <div className="flex-col">
-                    <VaultSlot ilevel={levelToILevel(sortedRuns[3].level, season)} loading={loading} />
+                    <VaultSlot ilevel={levelToILevel(sortedRuns[3].level, season)} loading={loading} season={season} />
                     <div className="grid grid-cols-3 gap-1 mt-2">
                         <Tooltip message={sortedRuns[1].name}>
                             <DungeonRun ilevel={levelToILevel(sortedRuns[1].level, season)} label={levelToLabel(sortedRuns[1].level)} season={season} />
@@ -56,7 +56,7 @@ export default function MythicPlusPanel({data, season, loading}: MythicPlusPanel
                     </div>
                 </div>
                 <div className="flex-col">
-                    <VaultSlot ilevel={levelToILevel(sortedRuns[7].level, season)} loading={loading} />
+                    <VaultSlot ilevel={levelToILevel(sortedRuns[7].level, season)} loading={loading} season={season} />
                     <div className="grid grid-cols-4 gap-1 mt-2">
                         <Tooltip message={sortedRuns[4].name}>
                             <DungeonRun ilevel={levelToILevel(sortedRuns[4].level, season)} label={levelToLabel(sortedRuns[4].level)} season={season} />
