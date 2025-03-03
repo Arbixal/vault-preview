@@ -1,25 +1,18 @@
+import { ilvlToRarity } from "../seasonData";
+
+
 interface DungeonRunProps {
     ilevel: number;
     label: string;
+    season: number | undefined;
 }
 
-export default function DungeonRun({ilevel, label}: DungeonRunProps) {
-    var textClass = 'text-poor';
-    var borderClass = 'border-poor';
+export default function DungeonRun({ilevel, label, season}: DungeonRunProps) {
+    
+    var rarity: string = ilvlToRarity(ilevel, season);
 
-    if (ilevel >= 519) {
-        textClass = 'text-legendary';
-        borderClass = 'border-legendary';
-    } else if (ilevel >= 506) {
-        textClass = 'text-epic';
-        borderClass = 'border-epic';
-    } else if (ilevel >= 493) {
-        textClass = 'text-rare';
-        borderClass = 'border-rare';
-    } else if (ilevel >= 480) {
-        textClass = 'text-uncommon';
-        borderClass = 'border-uncommon';
-    }
+    var textClass = 'text-' + rarity;
+    var borderClass = 'border-' + rarity;
 
     return (
         <div className={`border rounded bg-neutral-950 container ${textClass} ${borderClass}`}>{label}</div>

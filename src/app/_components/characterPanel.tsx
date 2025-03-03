@@ -34,9 +34,9 @@ export default function CharacterPanel({character} : ICharacterPanelProps)
 
   var childElements = (
     <>
-      <RaidPanel data={characterData?.raid} loading={isLoading} />
+      <RaidPanel data={characterData?.raid} season={characterData?.season} loading={isLoading} />
 
-      <MythicPlusPanel data={characterData?.dungeons} loading={isLoading} />
+      <MythicPlusPanel data={characterData?.dungeons} season={characterData?.season} loading={isLoading} />
     </>
   );
 
