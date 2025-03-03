@@ -99,11 +99,11 @@ export default function RaidPanel({ data, season, loading }: RaidPanelProps) {
     const sortedBosses = [...bosses.sort((a, b) => b.ilvl - a.ilvl)];
 
     // Ensure there are 6 bosses
-    for (var i = sortedBosses.length; i < 7; ++i) {
+    for (var i = sortedBosses.length; i < 6; ++i) {
         sortedBosses.push({ ilvl: -1, label: '', tooltip: ''});
     }
 
-    const extraBosses = sortedBosses.length > 7 ? sortedBosses.slice(7) : [];
+    const extraBosses = sortedBosses.length > 6 ? sortedBosses.slice(6) : [];
 
     return (
         <div className="flex-col">
@@ -131,16 +131,13 @@ export default function RaidPanel({ data, season, loading }: RaidPanelProps) {
                     </div>
                 </div>
                 <div className="flex-col">
-                    <VaultSlot ilevel={sortedBosses[6].ilvl} loading={loading} season={season} />
-                    <div className="grid grid-cols-3 gap-1 mt-2">
+                    <VaultSlot ilevel={sortedBosses[5].ilvl} loading={loading} season={season} />
+                    <div className="grid grid-cols-2 gap-1 mt-2">
                         <Tooltip message={sortedBosses[4].tooltip}>
                             <DungeonRun ilevel={sortedBosses[4].ilvl} label={sortedBosses[4].label} season={season} />
                         </Tooltip>
                         <Tooltip message={sortedBosses[5].tooltip}>
                             <DungeonRun ilevel={sortedBosses[5].ilvl} label={sortedBosses[5].label} season={season} />
-                        </Tooltip>
-                        <Tooltip message={sortedBosses[6].tooltip}>
-                            <DungeonRun ilevel={sortedBosses[6].ilvl} label={sortedBosses[6].label} season={season} />
                         </Tooltip>
                     </div>
                 </div>
