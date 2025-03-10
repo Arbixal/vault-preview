@@ -42,7 +42,7 @@ export default function RaidPanel({ data, season, loading }: RaidPanelProps) {
         bosses.push({ label: 'SB', ilvl: bossDataToILevel(data?.['stix-bunkjunker'], season), tooltip: getBossTooltip("Stix Bunkjunker", data?.['stix-bunkjunker'])});
         bosses.push({ label: 'SL', ilvl: bossDataToILevel(data?.['sprocketmonger-lockenstock'], season), tooltip: getBossTooltip("Sprocketmonger Lockenstock", data?.['sprocketmonger-lockenstock'])});
         bosses.push({ label: 'OAB', ilvl: bossDataToILevel(data?.['the-one-armed-bandit'], season), tooltip: getBossTooltip("The One-Armed Bandit", data?.['the-one-armed-bandit'])});
-        bosses.push({ label: 'M', ilvl: bossDataToILevel(data?.['mugzee'], season), tooltip: getBossTooltip("Mug'zee", data?.['mugzee'])});
+        bosses.push({ label: 'M', ilvl: bossDataToILevel(data?.['mug\'zee'], season), tooltip: getBossTooltip("Mug'zee", data?.['mug\'zee'])});
         bosses.push({ label: 'G', ilvl: bossDataToILevel(data?.['chrome-king-gallywix'], season), tooltip: getBossTooltip("Gallywix", data?.['chrome-king-gallywix'])});
     }
 
