@@ -32,12 +32,32 @@ const MPLUS_LEVELS: { [key: number]: [number, number][] } = {
     14: [ [10, 662], [7, 658], [6, 655], [4, 652], [2, 649] ]               // TWW_S2 Undermine
 }
 
+const DELVE_LEVELS: { [key: number]: [number, number][] } = {
+    14: [ [8, 649], [7, 645], [5, 642], [4, 636], [3, 626], [1, 623] ]      // TWW_S2 Undermine
+}
 
-export function levelToILevel(level: number, season: number | undefined) {
+export function delveToILevel(level: number, season: number | undefined): number {
     if (season === undefined)
         return -1;
 
-    var levels = MPLUS_LEVELS[season] ?? []
+    var levels = DELVE_LEVELS[season] ?? [];
+
+    for (var i = 0; i < levels.length; ++i) {
+        let [breakpoint, ilvl] = levels[i];
+
+        if (level >= breakpoint)
+            return ilvl;
+    }
+
+    return -1;
+}
+
+
+export function levelToILevel(level: number, season: number | undefined): number {
+    if (season === undefined)
+        return -1;
+
+    var levels = MPLUS_LEVELS[season] ?? [];
 
     for (var i = 0; i < levels.length; ++i) {
         let [breakpoint, ilvl] = levels[i];

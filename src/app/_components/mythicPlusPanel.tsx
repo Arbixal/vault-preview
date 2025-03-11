@@ -31,7 +31,7 @@ export default function MythicPlusPanel({data, season, loading}: MythicPlusPanel
     const extraRuns = sortedRuns.length > 8 ? sortedRuns.slice(8) : [];
 
     return (
-        <div className="flex-col mt-5">
+        <div className="flex-col">
             <div className="grid grid-cols-3 gap-2">
                 <div className="flex-col">
                     <VaultSlot ilevel={levelToILevel(sortedRuns[0].level, season)} loading={loading} season={season} />

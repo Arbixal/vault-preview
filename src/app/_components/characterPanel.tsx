@@ -2,6 +2,7 @@ import useSWR from "swr";
 import MythicPlusPanel, { DungeonData } from "./mythicPlusPanel";
 import RaidPanel, { RaidData } from "./raidPanel";
 import MessagePanel from "./messagePanel";
+import DelvePanel, { DelveData } from "./delvePanel";
 
 interface ICharacterPanelProps {
     character: Character;
@@ -16,6 +17,7 @@ export interface Character {
 export interface CharacterData {
     raid: RaidData;
     dungeons: DungeonData;
+    delves: DelveData;
 }
 
 export default function CharacterPanel({character} : ICharacterPanelProps)
@@ -34,9 +36,14 @@ export default function CharacterPanel({character} : ICharacterPanelProps)
 
   var childElements = (
     <>
+      <h2 className={`text-${classColour}/50 `}>Raids</h2>
       <RaidPanel data={characterData?.raid} season={characterData?.season} loading={isLoading} />
 
+      <h2 className={`text-${classColour}/50 mt-5`}>M+</h2>
       <MythicPlusPanel data={characterData?.dungeons} season={characterData?.season} loading={isLoading} />
+
+      <h2 className={`text-${classColour}/50 mt-5`}>Delves</h2>
+      <DelvePanel data={characterData?.delves} season={characterData?.season} loading={isLoading} />
     </>
   );
 
