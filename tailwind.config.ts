@@ -27,7 +27,7 @@ const config: Config = {
         'monk': '#00FF98',
         'paladin': '#F48CBA',
         'priest': '#FFFFFF',
-        'rogue': '#FFFF468',
+        'rogue': '#FFF468',
         'shaman': '#0070DD',
         'warlock': '#8788EE',
         'warrior': '#C69B6D',

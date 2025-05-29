@@ -6,7 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 function getCharacters(): Character[] {
-  return [
+  const saved: string | null = localStorage.getItem("characters");
+  const initialValue = JSON.parse(saved ?? "[]");
+
+  return initialValue;
+
+  /*return [
     //{"region": "us", "name": "bixshift", "realm": "nagrand"},
     //{"region": "us", "name": "bixsham", "realm": "nagrand"},
     //{"region": "us", "name": "bixmonk", "realm": "nagrand"},
@@ -14,7 +19,7 @@ function getCharacters(): Character[] {
     //{"region": "us", "name": "bixadin", "realm": "nagrand"},
     //{"region": "us", "name": "bixvoker", "realm": "nagrand"},
     //{"region": "us", "name": "bixikong", "realm": "nagrand"},
-  ]
+  ]*/
 }
 
 export default function Home() {
@@ -23,14 +28,25 @@ export default function Home() {
     e.preventDefault();
 
     if (realm !== null && name !== null) {
-      setCharacters(existing => [...existing, { "region": region.toLowerCase(), "realm": realm.toLowerCase(), "name": name.toLowerCase()}]);
+      setCharacters(existing => { 
+        var newArray = [...existing, { "region": region.toLowerCase(), "realm": realm.toLowerCase(), "name": name.toLowerCase()}];
+        localStorage.setItem("characters", JSON.stringify(newArray));
+
+        return newArray;
+      });
+      
     }
     
     e.currentTarget.reset();
   }
 
   const handleRemove = (realm: string, name: string) => {
-    setCharacters(existing => existing.filter(x => x.realm !== realm || x.name !== name));
+    setCharacters(existing => {
+      var newArray = existing.filter(x => x.realm !== realm || x.name !== name);
+      localStorage.setItem("characters", JSON.stringify(newArray));
+
+      return newArray;
+    });
   }
 
   const [region, setRegion] = useState("us");
