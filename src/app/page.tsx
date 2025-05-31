@@ -1,17 +1,12 @@
 "use client"
 
-import { useState, MouseEvent, FormEvent } from "react";
+import { useState, useEffect, MouseEvent, FormEvent } from "react";
 import CharacterPanel, { Character } from "./_components/characterPanel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 function getCharacters(): Character[] {
-  const saved: string | null = localStorage.getItem("characters");
-  const initialValue = JSON.parse(saved ?? "[]");
-
-  return initialValue;
-
-  /*return [
+  return [
     //{"region": "us", "name": "bixshift", "realm": "nagrand"},
     //{"region": "us", "name": "bixsham", "realm": "nagrand"},
     //{"region": "us", "name": "bixmonk", "realm": "nagrand"},
@@ -19,7 +14,7 @@ function getCharacters(): Character[] {
     //{"region": "us", "name": "bixadin", "realm": "nagrand"},
     //{"region": "us", "name": "bixvoker", "realm": "nagrand"},
     //{"region": "us", "name": "bixikong", "realm": "nagrand"},
-  ]*/
+  ]
 }
 
 export default function Home() {
@@ -53,6 +48,13 @@ export default function Home() {
   const [realm, setRealm] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [characters, setCharacters] = useState(getCharacters());
+
+  useEffect(() => {
+    const saved: string | null = localStorage.getItem("characters");
+    const initialValue = JSON.parse(saved ?? "[]");
+
+    setCharacters(initialValue);
+  }, [])
 
   return (
     <main className="flex flex-col items-center p-3 md:p-5">
