@@ -2,38 +2,45 @@
 const DF_S4: number = 12;
 const TWW_S1: number = 13;
 const TWW_S2: number = 14;
+const TWW_S3: number = 15;
 
 const MYTHIC_RAID: { [key: number]: number; } = { 
     12: 519, // DF_S4
     13: 623, // TWW_S1
-    14: 662  // TWW_S2
+    14: 662, // TWW_S2
+    15: 707  // TWW_S3
 };
 
 const HEROIC_RAID: { [key: number]: number; } = { 
     12: 506, // DF_S4
     13: 610, // TWW_S1
-    14: 649 // TWW_S2
+    14: 649, // TWW_S2
+    15: 694  // TWW_S3
 };
 const NORMAL_RAID: { [key: number]: number; } = { 
     12: 493, // DF_S4
     13: 597, // TWW_S1
-    14: 636 // TWW_S2
+    14: 636, // TWW_S2
+    15: 681  // TWW_S3
 };
 
 const LFR_RAID: { [key: number]: number; } = { 
     12: 480, // DF_S4
     13: 584, // TWW_S1
-    14: 623 // TWW_S2
+    14: 623, // TWW_S2
+    15: 668 // TWW_S3
 };
 
 const MPLUS_LEVELS: { [key: number]: [number, number][] } = {
     12: [ [10, 522], [8, 519], [6, 515], [4, 512], [2, 509] ],              // DF_S4 Fated
     13: [ [10, 623], [8, 619], [7, 616], [5, 613], [3, 610], [2, 606] ],    // TWW_S1 Nerubar
-    14: [ [10, 662], [7, 658], [6, 655], [4, 652], [2, 649] ]               // TWW_S2 Undermine
+    14: [ [10, 662], [7, 658], [6, 655], [4, 652], [2, 649] ],              // TWW_S2 Undermine
+    15: [ [10, 707], [7, 704], [6, 701], [4, 697], [2, 694] ]               // TWW_S3 Manaforge
 }
 
 const DELVE_LEVELS: { [key: number]: [number, number][] } = {
-    14: [ [8, 649], [7, 645], [5, 642], [4, 636], [3, 626], [1, 623] ]      // TWW_S2 Undermine
+    14: [ [8, 649], [7, 645], [5, 642], [4, 636], [3, 626], [1, 623] ],     // TWW_S2 Undermine
+    15: [ [8, 694], [7, 691], [6, 688], [5, 681], [4, 678], [3, 675], [2, 671], [1, 668] ]  // TWW_S3 Manaforge
 }
 
 export function delveToILevel(level: number, season: number | undefined): number {
