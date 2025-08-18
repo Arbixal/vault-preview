@@ -43,6 +43,106 @@ const DELVE_LEVELS: { [key: number]: [number, number][] } = {
     15: [ [8, 694], [7, 691], [6, 688], [5, 681], [4, 678], [3, 675], [2, 671], [1, 668] ]  // TWW_S3 Manaforge
 }
 
+const BOSS_NAMES: { [key: number]: BossName[] } = {
+    9: [    // Vault of the Incarnates
+        { label: 'E', key: "eranog", name: "Eranog" },
+        { label: 'T', key: "terros", name: "Terros" },
+        { label: 'PC', key: "the-primal-council", name: "The Primal Council" },
+        { label: 'SCB', key: "sennarth", name: "Sennarth, the Cold Breath" },
+        { label: 'D', key: "dathea", name: "Dathea, Ascended" },
+        { label: 'KG', key: "kurog-grimtotem", name: "Kurog Grimtotem" },
+        { label: 'BD', key: "broodkeeper-diurna", name: "Broodkeeper Diurna" },
+        { label: 'R', key: "raszageth-the-storm-eater", name: "Raszageth the Storm Eater" },
+    ],
+    10: [   // Aberrus
+        { label: 'K', key: "kazzara", name: "Kazzara, the Hellforged" },
+        { label: 'AC', key: "the-amalgamation-chamber", name: "The Amalgamation Chamber" },
+        { label: 'FE', key: "the-forgotten-experiments", name: "The Forgotten Experiments" },
+        { label: 'AotZ', key: "assault-of-the-zaqali", name: "Assault of the Zaqali" },
+        { label: 'Rte', key: "rashok", name: "Rashok, the Elder" },
+        { label: 'Z', key: "the-vigilant-steward", name: "The Vigilant Steward, Zskarn" },
+        { label: 'M', key: "magmorax", name: "Magmorax" },
+        { label: 'EN', key: "echo-of-neltharion", name: "Echo of Neltharion" },
+        { label: 'SS', key: "scalecommander-sarkareth", name: "Scalecommander Sarkareth" },
+    ],
+    11: [   // Amirdrassil
+        { label: 'G', key: "gnarlroot", name: "Gnarlroot" },
+        { label: 'I', key: "igira-the-cruel", name: "Igira the Cruel" },
+        { label: 'V', key: "volcoross", name: "Volcoross" },
+        { label: 'L', key: "larodar", name: "Larodar, Keeper of the Flame" },
+        { label: 'CoD', key: "council-of-dreams", name: "Council of Dreams" },
+        { label: 'N', key: "nymue", name: "Nymue, Weaver of the Cycle" },
+        { label: 'S', key: "smolderon", name: "Smolderon" },
+        { label: 'TS', key: "tindral-sageswift", name: "Tindral Sageswift" },
+        { label: 'F', key: "fyrakk-the-blazing", name: "Fyrakk the Blazing" },
+    ],
+    12: [   // Fated S4
+        { label: 'E', key: "eranog", name: "Eranog" },
+        { label: 'T', key: "terros", name: "Terros" },
+        { label: 'PC', key: "the-primal-council", name: "The Primal Council" },
+        { label: 'SCB', key: "sennarth", name: "Sennarth, the Cold Breath" },
+        { label: 'D', key: "dathea", name: "Dathea, Ascended" },
+        { label: 'KG', key: "kurog-grimtotem", name: "Kurog Grimtotem" },
+        { label: 'BD', key: "broodkeeper-diurna", name: "Broodkeeper Diurna" },
+        { label: 'R', key: "raszageth-the-storm-eater", name: "Raszageth the Storm Eater" },
+        { label: 'K', key: "kazzara", name: "Kazzara, the Hellforged" },
+        { label: 'AC', key: "the-amalgamation-chamber", name: "The Amalgamation Chamber" },
+        { label: 'FE', key: "the-forgotten-experiments", name: "The Forgotten Experiments" },
+        { label: 'AotZ', key: "assault-of-the-zaqali", name: "Assault of the Zaqali" },
+        { label: 'Rte', key: "rashok", name: "Rashok, the Elder" },
+        { label: 'Z', key: "the-vigilant-steward", name: "The Vigilant Steward, Zskarn" },
+        { label: 'M', key: "magmorax", name: "Magmorax" },
+        { label: 'EN', key: "echo-of-neltharion", name: "Echo of Neltharion" },
+        { label: 'SS', key: "scalecommander-sarkareth", name: "Scalecommander Sarkareth" },
+        { label: 'G', key: "gnarlroot", name: "Gnarlroot" },
+        { label: 'I', key: "igira-the-cruel", name: "Igira the Cruel" },
+        { label: 'V', key: "volcoross", name: "Volcoross" },
+        { label: 'L', key: "larodar", name: "Larodar, Keeper of the Flame" },
+        { label: 'CoD', key: "council-of-dreams", name: "Council of Dreams" },
+        { label: 'N', key: "nymue", name: "Nymue, Weaver of the Cycle" },
+        { label: 'S', key: "smolderon", name: "Smolderon" },
+        { label: 'TS', key: "tindral-sageswift", name: "Tindral Sageswift" },
+        { label: 'F', key: "fyrakk-the-blazing", name: "Fyrakk the Blazing" },
+    ],
+    13: [   // Nerubar Palace
+        { label: 'U', key: "ulgrax-the-devourer", name: "Ulgrax" },
+        { label: 'B', key: "the-bloodbound-horror", name: "Bloodbound Horror" },
+        { label: 'S', key: "sikran", name: "Sikran" },
+        { label: 'R', key: "rashanan", name: "Rasha'nan" },
+        { label: 'BO', key: "broodtwister-ovinax", name: "Broodtwister Ovi'nax" },
+        { label: 'K', key: "nexus-princess-kyveza", name: "Nexus-Princess Ky'veza" },
+        { label: 'SC', key: "the-silken-court", name: "Silken Court" },
+        { label: 'A', key: "queen-ansurek", name: "Queen Ansurek" },
+    ],
+    14: [   // Liberation of Undermine
+        { label: 'V', key: "vexie-and-the-geargrinders", name: "Vexie and the Geargrinders" },
+        { label: 'CoC', key: "cauldron-of-carnage", name: "Cauldron of Carnage" },
+        { label: 'R', key: "rik-reverb", name: "Rik Reverb" },
+        { label: 'SB', key: "stix-bunkjunker", name: "Stix Bunkjunker" },
+        { label: 'SL', key: "sprocketmonger-lockenstock", name: "Sprocketmonger Lockenstock" },
+        { label: 'OAB', key: "the-one-armed-bandit", name: "The One-Armed Bandit" },
+        { label: 'M', key: "mug'zee", name: "Mug'zee" },
+        { label: 'G', key: "chrome-king-gallywix", name: "Gallywix" },
+    ],
+    15: [   // Manaforge Omega
+        { label: 'P', key: "plexus-sentinel", name: "Plexus Sentinel" },
+        { label: 'L', key: "loom'ithar", name: "Loom'ithar" },
+        { label: 'S', key: "soulbinder-naazindhri", name: "Soulbinder Naazindhri" },
+        { label: 'FA', key: "forgeweaver-araz", name: "Forgeweaver Araz" },
+        { label: 'SH', key: "the-soul-hunters", name: "The Soul Hunters" },
+        { label: 'F', key: "fractillus", name: "Fractillus" },
+        { label: 'N', key: "nexus-king-salhadaar", name: "Nexus-King Salhadaar" },
+        { label: 'D', key: "dimensius", name: "Dimensius" },
+    ]
+}
+
+export function getBossNames(season: number | undefined): BossName[] {
+    if (season === undefined)
+        return [];
+
+    return BOSS_NAMES[season] ?? [];
+}
+
 export function delveToILevel(level: number, season: number | undefined): number {
     if (season === undefined)
         return -1;
@@ -121,3 +221,9 @@ export type BossData = {
     normal: boolean;
     lfr: boolean;
 };
+
+export type BossName = {
+    label: string;
+    key: string;
+    name: string;
+}
