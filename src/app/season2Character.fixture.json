@@ -1,0 +1,93 @@
+{
+  "season2-test-character": {
+    "player_class": "shaman",
+    "raid": {
+      "nek'zali-the-soulcoiler": {
+        "mythic": false,
+        "heroic": true,
+        "normal": false,
+        "lfr": false
+      },
+      "entombed-sentinels": {
+        "mythic": false,
+        "heroic": true,
+        "normal": false,
+        "lfr": false
+      },
+      "vashnik-the-malignant": {
+        "mythic": false,
+        "heroic": false,
+        "normal": false,
+        "lfr": false
+      },
+      "the-lost-explorers": {
+        "mythic": false,
+        "heroic": false,
+        "normal": false,
+        "lfr": false
+      },
+      "sszorak": {
+        "mythic": false,
+        "heroic": false,
+        "normal": false,
+        "lfr": false
+      },
+      "the-twin-fangs": {
+        "mythic": false,
+        "heroic": false,
+        "normal": false,
+        "lfr": false
+      },
+      "the-coiled-altar": {
+        "mythic": false,
+        "heroic": false,
+        "normal": false,
+        "lfr": false
+      },
+      "ula'tek": {
+        "mythic": false,
+        "heroic": false,
+        "normal": true,
+        "lfr": false
+      },
+      "nymrissa-wavecaller": {
+        "mythic": false,
+        "heroic": true,
+        "normal": false,
+        "lfr": false
+      }
+    },
+    "dungeons": [
+      {
+        "level": 7,
+        "name": "Temple of Sethraliss"
+      },
+      {
+        "level": 4,
+        "name": "Den of Nalorakk"
+      },
+      {
+        "level": 4,
+        "name": "Altar of Fangs"
+      },
+      {
+        "level": 4,
+        "name": "Voidscar Arena"
+      }
+    ],
+    "delves": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+      "10": 0,
+      "11": 0
+    },
+    "season": 18
+  }
+}
