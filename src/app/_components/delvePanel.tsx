@@ -1,7 +1,6 @@
 import { delveToILevel } from "../seasonData";
 import DungeonRun from "./dungeonRun";
-import Tooltip from "./tooltip";
-import VaultSlot from "./vaultSlot";
+import VaultLane from "./vaultLane";
 
 interface DelvePanelProps {
     data: DelveData;
@@ -39,36 +38,27 @@ export default function DelvePanel({data, season, loading}: DelvePanelProps) {
 
     return (
         <div className="flex-col">
-            <div className="grid grid-cols-3 gap-2">
-                <div className="flex-col">
-                    <VaultSlot ilevel={delveToILevel(sortedRuns[1], season)} loading={loading} season={season} />
-                    <div className="grid grid-cols-2 gap-1 mt-2">
-                        <DungeonRun ilevel={delveToILevel(sortedRuns[0], season)} label={levelToLabel(sortedRuns[0])} season={season} />
-                        <DungeonRun ilevel={delveToILevel(sortedRuns[1], season)} label={levelToLabel(sortedRuns[1])} season={season} />
-                    </div>
-                </div>
-                <div className="flex-col">
-                    <VaultSlot ilevel={delveToILevel(sortedRuns[3], season)} loading={loading} season={season} />
-                    <div className="grid grid-cols-2 gap-1 mt-2">
-                        <DungeonRun ilevel={delveToILevel(sortedRuns[2], season)} label={levelToLabel(sortedRuns[2])} season={season} />
-                        <DungeonRun ilevel={delveToILevel(sortedRuns[3], season)} label={levelToLabel(sortedRuns[3])} season={season} />
-                    </div>
-                </div>
-                <div className="flex-col">
-                    <VaultSlot ilevel={delveToILevel(sortedRuns[7], season)} loading={loading} season={season} />
-                    <div className="grid grid-cols-4 gap-1 mt-2">
-                        <DungeonRun ilevel={delveToILevel(sortedRuns[4], season)} label={levelToLabel(sortedRuns[4])} season={season} />
-                        <DungeonRun ilevel={delveToILevel(sortedRuns[5], season)} label={levelToLabel(sortedRuns[5])} season={season} />
-                        <DungeonRun ilevel={delveToILevel(sortedRuns[6], season)} label={levelToLabel(sortedRuns[6])} season={season} />
-                        <DungeonRun ilevel={delveToILevel(sortedRuns[7], season)} label={levelToLabel(sortedRuns[7])} season={season} />
-                    </div>
-                </div>
+            <div className="grid min-w-0 grid-cols-3 justify-center gap-2 sm:grid-cols-[repeat(3,9rem)] sm:gap-4">
+                <VaultLane threshold="2 delves" ilevel={delveToILevel(sortedRuns[1], season)} loading={loading} season={season} runLayoutClassName="sm:grid-cols-2">
+                    <DungeonRun ilevel={delveToILevel(sortedRuns[0], season)} label={levelToLabel(sortedRuns[0])} loading={loading} season={season} />
+                    <DungeonRun ilevel={delveToILevel(sortedRuns[1], season)} label={levelToLabel(sortedRuns[1])} loading={loading} season={season} />
+                </VaultLane>
+                <VaultLane threshold="4 delves" ilevel={delveToILevel(sortedRuns[3], season)} loading={loading} season={season} runLayoutClassName="sm:grid-cols-2">
+                    <DungeonRun ilevel={delveToILevel(sortedRuns[2], season)} label={levelToLabel(sortedRuns[2])} loading={loading} season={season} />
+                    <DungeonRun ilevel={delveToILevel(sortedRuns[3], season)} label={levelToLabel(sortedRuns[3])} loading={loading} season={season} />
+                </VaultLane>
+                <VaultLane threshold="8 delves" ilevel={delveToILevel(sortedRuns[7], season)} loading={loading} season={season} runLayoutClassName="sm:grid-cols-4">
+                    <DungeonRun ilevel={delveToILevel(sortedRuns[4], season)} label={levelToLabel(sortedRuns[4])} loading={loading} season={season} />
+                    <DungeonRun ilevel={delveToILevel(sortedRuns[5], season)} label={levelToLabel(sortedRuns[5])} loading={loading} season={season} />
+                    <DungeonRun ilevel={delveToILevel(sortedRuns[6], season)} label={levelToLabel(sortedRuns[6])} loading={loading} season={season} />
+                    <DungeonRun ilevel={delveToILevel(sortedRuns[7], season)} label={levelToLabel(sortedRuns[7])} loading={loading} season={season} />
+                </VaultLane>
 
 
             </div>
-            <div className="grid grid-cols-9 gap-1 mt-2">
+            <div className="mt-1 flex flex-wrap justify-center gap-1">
                 {extraRuns.map((x, ix) => (
-                    <DungeonRun key={ix} ilevel={delveToILevel(x, season)} label={levelToLabel(x)} season={season} />
+                    <DungeonRun key={ix} ilevel={delveToILevel(x, season)} label={levelToLabel(x)} season={season} className="w-7" />
                 ))}
             </div>
         </div>

@@ -28,10 +28,7 @@
 @source inline("text-{deathknight,demonhunter,druid,evoker,hunter,mage,monk,paladin,priest,rogue,shaman,warlock,warrior}/50");
 @source inline("bg-{deathknight,demonhunter,druid,evoker,hunter,mage,monk,paladin,priest,rogue,shaman,warlock,warrior}/15");
 @source inline("border-{deathknight,demonhunter,druid,evoker,hunter,mage,monk,paladin,priest,rogue,shaman,warlock,warrior}");
-
-@utility bg-great-vault {
-  background-image: url('/great_vault.png');
-}
+@source inline("border-{poor,deathknight,demonhunter,druid,evoker,hunter,mage,monk,paladin,priest,rogue,shaman,warlock,warrior}/50");
 
 @utility text-balance {
   text-wrap: balance;

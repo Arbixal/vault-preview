@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import DungeonRun from "./dungeonRun";
 import Tooltip from "./tooltip";
-import VaultSlot from "./vaultSlot";
+import VaultLane from "./vaultLane";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { BossData, bossDataToILevel, getBossNames, BossName } from "../seasonData";
@@ -51,45 +51,36 @@ export default function RaidPanel({ data, season, loading }: RaidPanelProps) {
 
     return (
         <div className="flex-col">
-            <div className="grid grid-cols-3 gap-2">
-                <div className="flex-col">
-                    <VaultSlot ilevel={sortedBosses[1].ilvl} loading={loading} season={season} />
-                    <div className="grid grid-cols-2 gap-1 mt-2">
-                        <Tooltip message={sortedBosses[0].tooltip}>
-                            <DungeonRun ilevel={sortedBosses[0].ilvl} label={sortedBosses[0].label} season={season} />
-                        </Tooltip>
-                        <Tooltip message={sortedBosses[1].tooltip}>
-                            <DungeonRun ilevel={sortedBosses[1].ilvl} label={sortedBosses[1].label} season={season} />
-                        </Tooltip>
-                    </div>
-                </div>
-                <div className="flex-col">
-                    <VaultSlot ilevel={sortedBosses[3].ilvl} loading={loading} season={season} />
-                    <div className="grid grid-cols-2 gap-1 mt-2">
-                        <Tooltip message={sortedBosses[2].tooltip}>
-                            <DungeonRun ilevel={sortedBosses[2].ilvl} label={sortedBosses[2].label} season={season} />
-                        </Tooltip>
-                        <Tooltip message={sortedBosses[3].tooltip}>
-                            <DungeonRun ilevel={sortedBosses[3].ilvl} label={sortedBosses[3].label} season={season} />
-                        </Tooltip>
-                    </div>
-                </div>
-                <div className="flex-col">
-                    <VaultSlot ilevel={sortedBosses[5].ilvl} loading={loading} season={season} />
-                    <div className="grid grid-cols-2 gap-1 mt-2">
-                        <Tooltip message={sortedBosses[4].tooltip}>
-                            <DungeonRun ilevel={sortedBosses[4].ilvl} label={sortedBosses[4].label} season={season} />
-                        </Tooltip>
-                        <Tooltip message={sortedBosses[5].tooltip}>
-                            <DungeonRun ilevel={sortedBosses[5].ilvl} label={sortedBosses[5].label} season={season} />
-                        </Tooltip>
-                    </div>
-                </div>
+            <div className="grid min-w-0 grid-cols-3 justify-center gap-2 sm:grid-cols-[repeat(3,9rem)] sm:gap-4">
+                <VaultLane threshold="2 bosses" ilevel={sortedBosses[1].ilvl} loading={loading} season={season} runLayoutClassName="sm:grid-cols-2">
+                    <Tooltip message={loading ? "" : sortedBosses[0].tooltip}>
+                        <DungeonRun ilevel={sortedBosses[0].ilvl} label={sortedBosses[0].label} loading={loading} season={season} />
+                    </Tooltip>
+                    <Tooltip message={loading ? "" : sortedBosses[1].tooltip}>
+                        <DungeonRun ilevel={sortedBosses[1].ilvl} label={sortedBosses[1].label} loading={loading} season={season} />
+                    </Tooltip>
+                </VaultLane>
+                <VaultLane threshold="4 bosses" ilevel={sortedBosses[3].ilvl} loading={loading} season={season} runLayoutClassName="sm:grid-cols-2">
+                    <Tooltip message={loading ? "" : sortedBosses[2].tooltip}>
+                        <DungeonRun ilevel={sortedBosses[2].ilvl} label={sortedBosses[2].label} loading={loading} season={season} />
+                    </Tooltip>
+                    <Tooltip message={loading ? "" : sortedBosses[3].tooltip}>
+                        <DungeonRun ilevel={sortedBosses[3].ilvl} label={sortedBosses[3].label} loading={loading} season={season} />
+                    </Tooltip>
+                </VaultLane>
+                <VaultLane threshold="6 bosses" ilevel={sortedBosses[5].ilvl} loading={loading} season={season} runLayoutClassName="sm:grid-cols-2">
+                    <Tooltip message={loading ? "" : sortedBosses[4].tooltip}>
+                        <DungeonRun ilevel={sortedBosses[4].ilvl} label={sortedBosses[4].label} loading={loading} season={season} />
+                    </Tooltip>
+                    <Tooltip message={loading ? "" : sortedBosses[5].tooltip}>
+                        <DungeonRun ilevel={sortedBosses[5].ilvl} label={sortedBosses[5].label} loading={loading} season={season} />
+                    </Tooltip>
+                </VaultLane>
             </div>
-            <div className="grid grid-cols-9 gap-1 mt-2">
+            <div className="mt-1 flex flex-wrap justify-center gap-1">
                 {extraBosses.map((x, ix) => (
                 <Tooltip key={ix} message={x.tooltip}>
-                    <DungeonRun ilevel={x.ilvl} label={x.label} season={season} />
+                    <DungeonRun ilevel={x.ilvl} label={x.label} season={season} className="w-7" />
                 </Tooltip>
                 ))}
             </div>
