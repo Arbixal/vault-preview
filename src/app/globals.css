@@ -1,6 +1,41 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-poor: #9d9d9d;
+  --color-common: #ffffff;
+  --color-uncommon: #1eff00;
+  --color-rare: #0070dd;
+  --color-epic: #a335ee;
+  --color-legendary: #ff8000;
+  --color-deathknight: #c41e3a;
+  --color-demonhunter: #a330c9;
+  --color-druid: #ff7c0a;
+  --color-evoker: #33937f;
+  --color-hunter: #aad372;
+  --color-mage: #3fc7eb;
+  --color-monk: #00ff98;
+  --color-paladin: #f48cba;
+  --color-priest: #ffffff;
+  --color-rogue: #fff468;
+  --color-shaman: #0070dd;
+  --color-warlock: #8788ee;
+  --color-warrior: #c69b6d;
+}
+
+@source inline("text-{poor,common,uncommon,rare,epic,legendary}");
+@source inline("border-{poor,common,uncommon,rare,epic,legendary}");
+@source inline("text-{deathknight,demonhunter,druid,evoker,hunter,mage,monk,paladin,priest,rogue,shaman,warlock,warrior}");
+@source inline("text-{deathknight,demonhunter,druid,evoker,hunter,mage,monk,paladin,priest,rogue,shaman,warlock,warrior}/50");
+@source inline("bg-{deathknight,demonhunter,druid,evoker,hunter,mage,monk,paladin,priest,rogue,shaman,warlock,warrior}/15");
+@source inline("border-{deathknight,demonhunter,druid,evoker,hunter,mage,monk,paladin,priest,rogue,shaman,warlock,warrior}");
+
+@utility bg-great-vault {
+  background-image: url('/great_vault.png');
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
 
 :root {
   --foreground-rgb: 255, 255, 255;
@@ -24,10 +59,4 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
 }
