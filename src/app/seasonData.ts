@@ -159,7 +159,7 @@ const BOSS_NAMES: { [key: number]: BossName[] } = {
         { label: 'TF', key: "the-twin-fangs", name: "The Twin Fangs" },
         { label: 'CA', key: "the-coiled-altar", name: "The Coiled Altar" },
         { label: 'U', key: "ula'tek", name: "Ula'tek" },
-        { label: 'NW', key: "nymrissa-wavecaller", name: "Nymrissa Wavecaller" },
+        { label: 'NW', key: "nymrissa-wavecaller", name: "Nymrissa Wavecaller", lfrLabel: "World" },
     ]
 }
 
@@ -266,6 +266,7 @@ export type BossName = {
     label: string;
     key: string;
     name: string;
+    lfrLabel?: string;
 }
 
 type RarityThresholds = {

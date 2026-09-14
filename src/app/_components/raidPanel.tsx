@@ -19,11 +19,11 @@ interface IBossEncounter {
     tooltip: ReactNode;
 }
 
-function getBossTooltip(bossName: string, data: BossData): ReactNode
+function getBossTooltip(bossName: string, data: BossData, lfrLabel: string = "LFR"): ReactNode
 {
     return (<div className="flex flex-col h-fit">
         <h1 className="font-bold mb-2">{bossName}</h1>
-        <div className="flex text-uncommon"><span className="text-left flex-auto">LFR</span> {data?.lfr == true ? <FontAwesomeIcon icon={faCircleCheck} className="mt-1.5" /> : ""}</div>
+        <div className="flex text-uncommon"><span className="text-left flex-auto">{lfrLabel}</span> {data?.lfr == true ? <FontAwesomeIcon icon={faCircleCheck} className="mt-1.5" /> : ""}</div>
         <div className="flex text-rare"><span className="text-left flex-auto">Normal</span> {data?.normal == true ? <FontAwesomeIcon icon={faCircleCheck} className="mt-1.5" /> : ""}</div>
         <div className="flex text-epic"><span className="text-left flex-auto">Heroic</span> {data?.heroic == true ? <FontAwesomeIcon icon={faCircleCheck} className="mt-1.5" /> : ""}</div>
         <div className="flex text-legendary"><span className="text-left flex-auto">Mythic</span> {data?.mythic == true ? <FontAwesomeIcon icon={faCircleCheck} className="mt-1.5" /> : ""}</div>
@@ -37,7 +37,7 @@ export default function RaidPanel({ data, season, loading }: RaidPanelProps) {
     var bossNames: BossName[] = getBossNames(season);
 
     bossNames.forEach((boss) => {
-        bosses.push({ label: boss.label, ilvl: bossDataToILevel(data?.[boss.key], season), tooltip: getBossTooltip(boss.name, data?.[boss.key])});
+        bosses.push({ label: boss.label, ilvl: bossDataToILevel(data?.[boss.key], season), tooltip: getBossTooltip(boss.name, data?.[boss.key], boss.lfrLabel)});
     });
 
     const sortedBosses = [...bosses.sort((a, b) => b.ilvl - a.ilvl)];

@@ -156,6 +156,7 @@ describe("getBossNames", () => {
             label: "NW",
             key: "nymrissa-wavecaller",
             name: "Nymrissa Wavecaller",
+            lfrLabel: "World",
         });
     });
 });
