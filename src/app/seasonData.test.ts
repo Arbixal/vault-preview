@@ -136,6 +136,28 @@ describe("getBossNames", () => {
     it("returns an empty list for an unknown season", () => {
         expect(getBossNames(999)).toEqual([]);
     });
+
+    it("returns the Midnight Season 2 raid and Lair encounters in API order", () => {
+        const bosses = getBossNames(MIDNIGHT_S2);
+
+        expect(bosses).toHaveLength(9);
+        expect(bosses.map((boss) => boss.key)).toEqual([
+            "nek'zali-the-soulcoiler",
+            "entombed-sentinels",
+            "vashnik-the-malignant",
+            "the-lost-explorers",
+            "sszorak",
+            "the-twin-fangs",
+            "the-coiled-altar",
+            "ula'tek",
+            "nymrissa-wavecaller",
+        ]);
+        expect(bosses[8]).toEqual({
+            label: "NW",
+            key: "nymrissa-wavecaller",
+            name: "Nymrissa Wavecaller",
+        });
+    });
 });
 
 describe("ilvlToRarity", () => {

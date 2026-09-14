@@ -149,6 +149,17 @@ const BOSS_NAMES: { [key: number]: BossName[] } = {
         { label: 'F', key: "fractillus", name: "Fractillus" },
         { label: 'N', key: "nexus-king-salhadaar", name: "Nexus-King Salhadaar" },
         { label: 'D', key: "dimensius", name: "Dimensius" },
+    ],
+    18: [   // Midnight S2: Venomous Abyss and Tidebound Grotto
+        { label: 'N', key: "nek'zali-the-soulcoiler", name: "Nek'zali the Soulcoiler" },
+        { label: 'ES', key: "entombed-sentinels", name: "Entombed Sentinels" },
+        { label: 'V', key: "vashnik-the-malignant", name: "Vashnik the Malignant" },
+        { label: 'LE', key: "the-lost-explorers", name: "The Lost Explorers" },
+        { label: 'S', key: "sszorak", name: "Sszorak" },
+        { label: 'TF', key: "the-twin-fangs", name: "The Twin Fangs" },
+        { label: 'CA', key: "the-coiled-altar", name: "The Coiled Altar" },
+        { label: 'U', key: "ula'tek", name: "Ula'tek" },
+        { label: 'NW', key: "nymrissa-wavecaller", name: "Nymrissa Wavecaller" },
     ]
 }
 
