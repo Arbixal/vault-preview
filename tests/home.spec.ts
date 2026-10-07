@@ -247,9 +247,15 @@ test("preserves stale and unavailable section states", async ({ page }) => {
       contentType: "application/json",
       body: JSON.stringify({
         ...versionedCharacterFixture,
-        sections: versionedCharacterFixture.sections.map((section) => section.id === "raid"
-          ? { ...section, status: "unavailable", freshness: "stale", subtitle: "Raid data is unavailable." }
-          : section),
+        sections: versionedCharacterFixture.sections.map((section) => {
+          if (section.id === "raid") {
+            return { ...section, status: "unavailable", freshness: "stale", subtitle: "Raid data is unavailable." };
+          }
+          if (section.id === "mythic-plus") {
+            return { ...section, freshness: "future-freshness" };
+          }
+          return section;
+        }),
       }),
     });
   });
@@ -259,6 +265,7 @@ test("preserves stale and unavailable section states", async ({ page }) => {
   await addCharacter(page, "us", "nagrand", "bixposter");
 
   await expect(page.getByText("Raid data is unavailable.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Mythic+ is using stale data.", { exact: true })).toHaveCount(0);
 });
 
 test("can retry a failed character request", async ({ page }) => {

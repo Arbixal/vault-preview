@@ -115,7 +115,7 @@ function SectionStatus({section}: {section: VaultSection | undefined}) {
     return null;
   }
 
-  const stale = section.freshness.toLowerCase() !== "fresh";
+  const stale = section.freshness.toLowerCase() === "stale";
   const unavailable = section.status.toLowerCase() === "unavailable";
   if (!stale && !unavailable) {
     return null;
