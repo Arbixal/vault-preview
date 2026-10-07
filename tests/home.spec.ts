@@ -14,6 +14,68 @@ const appConfigFixture = {
   },
 };
 
+const fixtureRaidItems = [
+  {
+    id: "wow:journal-encounter:1",
+    label: "N",
+    state: "complete",
+    itemLevel: 318,
+    rarity: "legendary",
+    progress: {
+      dimensions: [
+        { id: "heroic", label: "Heroic", state: "complete", completed: true },
+        { id: "lfr", label: "Raid Finder", state: "incomplete", completed: false },
+        { id: "heroic", label: "Heroic", state: "complete", completed: true },
+        { id: "lfr", label: "Raid Finder", state: "incomplete", completed: false },
+        { id: "mythic", label: "Mythic", state: "incomplete", completed: false },
+      ],
+    },
+    tooltip: { title: "Nek'zali the Soulcoiler", rows: [] },
+  },
+  {
+    id: "wow:journal-encounter:2",
+    label: "NW",
+    state: "complete",
+    itemLevel: 318,
+    rarity: "legendary",
+    progress: {
+      dimensions: [
+        { id: "heroic", label: "Heroic", state: "complete", completed: true },
+      ],
+    },
+    tooltip: { title: "Nymrissa Wavecaller", rows: [] },
+  },
+  {
+    id: "wow:journal-encounter:3",
+    label: "U",
+    state: "complete",
+    itemLevel: 305,
+    rarity: "epic",
+    progress: {
+      dimensions: [
+        { id: "normal", label: "Normal", state: "complete", completed: true },
+      ],
+    },
+    tooltip: { title: "Ula'tek", rows: [] },
+  },
+  { id: "wow:journal-encounter:4", label: "LE", state: "incomplete", progress: { dimensions: [] } },
+  { id: "wow:journal-encounter:5", label: "SSZ", state: "incomplete", progress: { dimensions: [] } },
+  { id: "wow:journal-encounter:6", label: "TF", state: "incomplete", progress: { dimensions: [] } },
+];
+
+const fixtureMythicPlusItems = season2Fixture["season2-test-character"].dungeons.map((run, index) => ({
+  id: `raiderio:run:${index + 1}`,
+  label: `${run.name} +${run.level}`,
+  state: "complete",
+  itemLevel: run.level >= 7 ? 315 : 308,
+  rarity: run.level >= 7 ? "epic" : "rare",
+  progress: { value: run.level },
+  tooltip: {
+    title: run.name,
+    rows: [{ label: "Mythic level", value: `+${run.level}` }],
+  },
+}));
+
 const versionedCharacterFixture = {
   schemaVersion: 1,
   character: {
@@ -37,48 +99,25 @@ const versionedCharacterFixture = {
       freshness: "fresh",
       slots: [
         {
+          id: "raid-slot-2",
+          requirement: { unit: "bosses", required: 2, label: "2 bosses" },
+          progress: { completed: 3, state: "complete" },
+          reward: { itemLevel: 315, rarity: "epic" },
+          items: fixtureRaidItems.slice(0, 2),
+        },
+        {
+          id: "raid-slot-4",
+          requirement: { unit: "bosses", required: 4, label: "4 bosses" },
+          progress: { completed: 3, state: "incomplete" },
+          reward: { itemLevel: null, rarity: null },
+          items: fixtureRaidItems.slice(0, 4),
+        },
+        {
           id: "raid-slot-6",
           requirement: { unit: "bosses", required: 6, label: "6 bosses" },
           progress: { completed: 3, state: "incomplete" },
           reward: { itemLevel: null, rarity: null },
-          items: [
-            {
-              id: "wow:journal-encounter:1",
-              label: "N",
-              state: "complete",
-              progress: {
-                dimensions: [
-                  { id: "heroic", label: "Heroic", state: "complete", completed: true },
-                  { id: "lfr", label: "Raid Finder", state: "incomplete", completed: false },
-                  { id: "heroic", label: "Heroic", state: "complete", completed: true },
-                  { id: "lfr", label: "Raid Finder", state: "incomplete", completed: false },
-                ],
-              },
-              tooltip: { title: "Nek'zali the Soulcoiler", rows: [] },
-            },
-            {
-              id: "wow:journal-encounter:2",
-              label: "NW",
-              state: "complete",
-              progress: {
-                dimensions: [
-                  { id: "heroic", label: "Heroic", state: "complete", completed: true },
-                ],
-              },
-              tooltip: { title: "Nymrissa Wavecaller", rows: [] },
-            },
-            {
-              id: "wow:journal-encounter:3",
-              label: "U",
-              state: "complete",
-              progress: {
-                dimensions: [
-                  { id: "normal", label: "Normal", state: "complete", completed: true },
-                ],
-              },
-              tooltip: { title: "Ula'tek", rows: [] },
-            },
-          ],
+          items: fixtureRaidItems,
         },
       ],
       additionalItems: [],
@@ -92,20 +131,25 @@ const versionedCharacterFixture = {
       freshness: "fresh",
       slots: [
         {
+          id: "mythic-plus-slot-1",
+          requirement: { unit: "runs", required: 1, label: "1 run" },
+          progress: { completed: 4, state: "complete" },
+          reward: { itemLevel: 315, rarity: "epic" },
+          items: fixtureMythicPlusItems.slice(0, 1),
+        },
+        {
           id: "mythic-plus-slot-4",
           requirement: { unit: "runs", required: 4, label: "4 runs" },
           progress: { completed: 4, state: "complete" },
           reward: { itemLevel: 315, rarity: "epic" },
-          items: season2Fixture["season2-test-character"].dungeons.map((run, index) => ({
-            id: `raiderio:run:${index + 1}`,
-            label: `${run.name} +${run.level}`,
-            state: "complete",
-            progress: { value: run.level },
-            tooltip: {
-              title: run.name,
-              rows: [{ label: "Mythic level", value: `+${run.level}` }],
-            },
-          })),
+          items: fixtureMythicPlusItems.slice(0, 4),
+        },
+        {
+          id: "mythic-plus-slot-8",
+          requirement: { unit: "runs", required: 8, label: "8 runs" },
+          progress: { completed: 4, state: "incomplete" },
+          reward: { itemLevel: null, rarity: null },
+          items: fixtureMythicPlusItems,
         },
       ],
       additionalItems: [],
@@ -185,16 +229,30 @@ test("renders Season 2 character progress from a static export", async ({ page }
   await expect(page.getByText("Weekly runs", { exact: true })).toBeVisible();
   await expect(page.getByText("Weekly completions", { exact: true })).toBeVisible();
   await expect(page.getByText("NW", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("mythic-plus-progress").getByTitle("Temple of Sethraliss +7")).toBeVisible();
   await expect(page.getByText("Temple of Sethraliss", { exact: true })).toBeAttached();
   await expect(page.getByText("6 bosses", { exact: true })).toBeVisible();
   await expect(page.getByText("4 runs", { exact: true })).toBeVisible();
   await expect(page.getByText("2 delves", { exact: true })).toBeVisible();
-  await expect(page.getByTestId("raid-progress").locator('[role="list"]').locator(':scope > [role="listitem"]')).toHaveCount(3);
+  await expect(page.getByTestId("vault-slot-progress-raid-slot-2")).toHaveText("2 / 2 bosses");
+  await expect(page.getByTestId("vault-slot-progress-raid-slot-4")).toHaveText("3 / 4 bosses");
+  await expect(page.getByTestId("vault-slot-progress-raid-slot-6")).toHaveText("3 / 6 bosses");
+  await expect(page.getByTestId("raid-progress").locator('[role="list"]').locator(':scope > [role="listitem"]')).toHaveCount(6);
+  await expect(page.getByTestId("mythic-plus-progress").locator('[role="list"]').locator(':scope > [role="listitem"]')).toHaveCount(4);
+  await expect(page.locator('[data-testid^="vault-slot-mythic-plus-"] [role="list"]')).toHaveCount(0);
+  await expect(page.getByTestId("raid-progress").locator('[data-item-id="wow:journal-encounter:1"]')).toHaveClass(/border-orange-500\/70/);
+  await expect(page.getByTestId("mythic-plus-progress").locator('[data-item-id="raiderio:run:1"]')).toHaveClass(/border-fuchsia-500\/70/);
 
   const encounter = page.locator("[aria-describedby]").first();
   await encounter.focus();
-  await expect(page.locator('[role="tooltip"]').first()).toBeVisible();
-  await expect(page.locator('[role="tooltip"]').first().getByText("Heroic", { exact: true })).toHaveCount(1);
+  const tooltip = page.locator('[role="tooltip"]').first();
+  await expect(tooltip).toBeVisible();
+  await expect(tooltip.getByText("Heroic", { exact: true })).toHaveCount(1);
+  await expect(tooltip.getByText("Mythic", { exact: true })).toHaveCount(1);
+  const tooltipBox = await tooltip.boundingBox();
+  expect(tooltipBox).not.toBeNull();
+  expect(tooltipBox!.x).toBeGreaterThanOrEqual(0);
+  expect(tooltipBox!.x + tooltipBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
 });
 
 test("renders the character card at a mobile viewport", async ({ page }) => {

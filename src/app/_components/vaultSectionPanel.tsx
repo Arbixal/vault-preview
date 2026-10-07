@@ -35,8 +35,11 @@ export default function VaultSectionPanel({section}: VaultSectionPanelProps) {
   const freshness = section.freshness.toLowerCase();
   const statusIsKnown = status === "available" || status === "empty" || status === "unavailable" || status === "unsupported";
   const showSubtitle = Boolean(section.subtitle) && status !== "unavailable";
-  const isRaid = section.kind.toLowerCase() === "raid";
-  const raidItems = isRaid ? sectionItems(section) : [];
+  const sectionKind = section.kind.toLowerCase();
+  const isRaid = sectionKind === "raid";
+  const isMythicPlus = sectionKind === "mythic-plus";
+  const hasCompactContributions = isRaid || isMythicPlus;
+  const contributionItems = hasCompactContributions ? sectionItems(section) : [];
 
   return (
     <section className="rounded-xl border border-neutral-800/80 bg-neutral-900/30 p-3" data-testid={`vault-section-${section.id}`}>
@@ -59,16 +62,13 @@ export default function VaultSectionPanel({section}: VaultSectionPanelProps) {
 
       {section.slots.length > 0 ? (
         <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {section.slots.map((slot) => <VaultSlotCard key={slot.id} showItems={!isRaid} slot={slot} />)}
+          {section.slots.map((slot) => <VaultSlotCard key={slot.id} showItems={!hasCompactContributions} slot={slot} />)}
         </div>
       ) : (
         <p className="rounded-lg border border-dashed border-neutral-800 px-3 py-5 text-center text-sm text-neutral-600">No vault slots are available.</p>
       )}
 
-      {isRaid ? <div className="mt-3 border-t border-neutral-800/80 pt-3" data-testid="raid-progress">
-        <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-neutral-600">Encounters</h4>
-        {raidItems.length > 0 ? <ProgressItemList compact items={raidItems} /> : <p className="text-xs text-neutral-600">No encounter progress is available.</p>}
-      </div> : section.additionalItems.length > 0 && <div className="mt-3 border-t border-neutral-800/80 pt-3">
+      {hasCompactContributions ? <ContributionSummary kind={isRaid ? "bosses" : "runs"} items={contributionItems} /> : section.additionalItems.length > 0 && <div className="mt-3 border-t border-neutral-800/80 pt-3">
         <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-neutral-600">Additional progress</h4>
         <ProgressItemList items={section.additionalItems} />
       </div>}
@@ -92,9 +92,13 @@ function SectionNotice({section}: VaultSectionPanelProps) {
 
 function VaultSlotCard({showItems, slot}: {showItems: boolean; slot: VaultSlot}) {
   const completed = slot.progress.completed;
+  const completedForSlot = completed === null ? null : Math.min(Math.max(completed, 0), slot.requirement.required);
   const progressLabel = completed === null
     ? humanize(slot.progress.state)
-    : `${completed} / ${slot.requirement.required}`;
+    : `${completedForSlot} / ${slot.requirement.required} ${progressUnit(slot.requirement.unit, completedForSlot)}`;
+  const progressAriaLabel = completed === null
+    ? `Progress ${progressLabel}`
+    : `${progressLabel} contribute to the ${slot.requirement.label} reward`;
 
   return (
     <article className="min-w-0 rounded-lg border border-neutral-800 bg-neutral-950/60 p-3" data-testid={`vault-slot-${slot.id}`}>
@@ -103,7 +107,7 @@ function VaultSlotCard({showItems, slot}: {showItems: boolean; slot: VaultSlot})
           <h4 className="text-sm font-semibold text-neutral-200">{slot.requirement.label}</h4>
           <p className="mt-0.5 text-[11px] uppercase tracking-[0.08em] text-neutral-600">{slot.requirement.unit}</p>
         </div>
-        <span className="rounded-full border border-neutral-800 px-2 py-1 text-xs text-neutral-500" aria-label={`Progress ${progressLabel}`}>{progressLabel}</span>
+        <span className="rounded-full border border-neutral-800 px-2 py-1 text-xs text-neutral-500" aria-label={progressAriaLabel} data-testid={`vault-slot-progress-${slot.id}`}>{progressLabel}</span>
       </header>
 
       <RewardDisplay reward={slot.reward} requirement={slot.requirement.label} />
@@ -114,6 +118,21 @@ function VaultSlotCard({showItems, slot}: {showItems: boolean; slot: VaultSlot})
         <p className="mt-3 text-xs text-neutral-600">No qualifying progress items.</p>
       )}
     </article>
+  );
+}
+
+function ContributionSummary({kind, items}: {kind: "bosses" | "runs"; items: ProgressItem[]}) {
+  const isRaid = kind === "bosses";
+  const testId = isRaid ? "raid-progress" : "mythic-plus-progress";
+
+  return (
+    <div className="mt-3 border-t border-neutral-800/80 pt-3" data-testid={testId}>
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <h4 className="text-[11px] font-semibold uppercase tracking-[0.1em] text-neutral-600">Contributing {kind}</h4>
+        {items.length > 0 && <span className="text-[10px] uppercase tracking-[0.08em] text-neutral-700">{items.length} total</span>}
+      </div>
+      {items.length > 0 ? <ProgressItemList compact items={items} /> : <p className="text-xs text-neutral-600">No contributing {kind} are available.</p>}
+    </div>
   );
 }
 
@@ -138,24 +157,24 @@ function RewardDisplay({reward, requirement}: {reward: VaultSlot["reward"]; requ
 
 function ProgressItemList({compact = false, items}: {compact?: boolean; items: ProgressItem[]}) {
   return (
-    <div className="mt-3 grid min-w-0 gap-2" role="list">
+    <div className={compact ? "mt-2 flex min-w-0 flex-wrap gap-1.5" : "mt-3 grid min-w-0 gap-2"} role="list">
       {items.map((item) => <ProgressItemView compact={compact} item={item} key={item.id} />)}
     </div>
   );
 }
 
 function ProgressItemView({compact, item}: {compact: boolean; item: ProgressItem}) {
-  const style = stateStyle(item.state);
+  const style = compact ? contributionStyle(item) : stateStyle(item.state);
   const dimensions = uniqueDimensions(item.progress?.dimensions ?? []);
   const tooltip = itemTooltip(item, dimensions);
   const itemRarity = item.rarity ? ` · ${humanize(item.rarity)}` : "";
-  const displayLabel = compact ? compactLabel(item.label) : item.label;
+  const displayLabel = compact ? compactLabel(item) : item.label;
 
   return (
     <Tooltip message={tooltip ? <StructuredTooltip tooltip={tooltip} /> : null} role="listitem">
-      <div className={`min-w-0 rounded-md border ${compact ? "flex h-8 items-center justify-center px-2" : "px-2.5 py-2"} ${style}`} aria-label={`${item.label}, ${humanize(item.state)}${itemRarity}`} data-item-id={item.id}>
+      <div className={`min-w-0 rounded-md border ${compact ? "flex h-6 min-w-7 items-center justify-center px-1.5" : "px-2.5 py-2"} ${style}`} aria-label={`${item.label}, ${humanize(item.state)}${itemRarity}`} data-item-id={item.id}>
         <div className="flex min-w-0 items-start justify-between gap-2">
-          <span className={`${compact ? "text-xs font-semibold" : "min-w-0 truncate text-sm"} text-neutral-200`} title={item.label}>{displayLabel}</span>
+          <span className={`${compact ? "text-[10px] font-semibold" : "min-w-0 truncate text-sm"} text-neutral-200`} title={item.label}>{displayLabel}</span>
           {!compact && <span className="shrink-0 text-[10px] uppercase tracking-[0.08em] text-neutral-500">{humanize(item.state)}</span>}
         </div>
         {!compact && (item.itemLevel !== undefined && item.itemLevel !== null || item.rarity) && <div className="mt-1 text-[11px] text-neutral-500">
@@ -190,14 +209,18 @@ function isComplete(dimension: ProgressDimension): boolean {
   return dimension.completed === true || dimension.state.toLowerCase() === "complete";
 }
 
-function compactLabel(label: string): string {
-  const words = label
+function compactLabel(item: ProgressItem): string {
+  if (item.id.startsWith("raiderio:run:") && typeof item.progress?.value === "number") {
+    return `+${item.progress.value}`;
+  }
+
+  const words = item.label
     .split(/\s+/)
     .map((word) => word.replace(/[^a-z0-9]/gi, ""))
     .filter((word) => word.length > 0 && !["a", "an", "and", "of", "the"].includes(word.toLowerCase()));
 
   if (words.length === 0) {
-    return label.slice(0, 3).toUpperCase();
+    return item.label.slice(0, 3).toUpperCase();
   }
   if (words.length === 1) {
     return words[0].slice(0, 3).toUpperCase();
@@ -261,8 +284,19 @@ function stateStyle(state: string): string {
   return STATE_STYLES[state.toLowerCase()] ?? STATE_STYLES.unknown;
 }
 
+function contributionStyle(item: ProgressItem): string {
+  const rarity = item.rarity?.toLowerCase();
+  const style = rarity ? RARITY_STYLES[rarity] : undefined;
+  return style ? `${style.border} bg-neutral-950/70 ${style.text}` : stateStyle(item.state);
+}
+
 function humanize(value: string): string {
   return value
     .replace(/[-_]+/g, " ")
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function progressUnit(unit: string, count: number | null): string {
+  const normalized = unit.toLowerCase();
+  return count === 1 && normalized.endsWith("s") ? normalized.slice(0, -1) : normalized;
 }
