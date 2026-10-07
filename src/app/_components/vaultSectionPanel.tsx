@@ -35,6 +35,8 @@ export default function VaultSectionPanel({section}: VaultSectionPanelProps) {
   const freshness = section.freshness.toLowerCase();
   const statusIsKnown = status === "available" || status === "empty" || status === "unavailable" || status === "unsupported";
   const showSubtitle = Boolean(section.subtitle) && status !== "unavailable";
+  const isRaid = section.kind.toLowerCase() === "raid";
+  const raidItems = isRaid ? sectionItems(section) : [];
 
   return (
     <section className="rounded-xl border border-neutral-800/80 bg-neutral-900/30 p-3" data-testid={`vault-section-${section.id}`}>
@@ -57,13 +59,16 @@ export default function VaultSectionPanel({section}: VaultSectionPanelProps) {
 
       {section.slots.length > 0 ? (
         <div className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {section.slots.map((slot) => <VaultSlotCard key={slot.id} slot={slot} />)}
+          {section.slots.map((slot) => <VaultSlotCard key={slot.id} showItems={!isRaid} slot={slot} />)}
         </div>
       ) : (
         <p className="rounded-lg border border-dashed border-neutral-800 px-3 py-5 text-center text-sm text-neutral-600">No vault slots are available.</p>
       )}
 
-      {section.additionalItems.length > 0 && <div className="mt-3 border-t border-neutral-800/80 pt-3">
+      {isRaid ? <div className="mt-3 border-t border-neutral-800/80 pt-3" data-testid="raid-progress">
+        <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-neutral-600">Encounters</h4>
+        {raidItems.length > 0 ? <ProgressItemList compact items={raidItems} /> : <p className="text-xs text-neutral-600">No encounter progress is available.</p>}
+      </div> : section.additionalItems.length > 0 && <div className="mt-3 border-t border-neutral-800/80 pt-3">
         <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-neutral-600">Additional progress</h4>
         <ProgressItemList items={section.additionalItems} />
       </div>}
@@ -85,7 +90,7 @@ function SectionNotice({section}: VaultSectionPanelProps) {
   return <p className="mb-3 rounded-md border border-amber-900/60 bg-amber-950/20 px-2.5 py-2 text-xs text-amber-200" role="status">{message}</p>;
 }
 
-function VaultSlotCard({slot}: {slot: VaultSlot}) {
+function VaultSlotCard({showItems, slot}: {showItems: boolean; slot: VaultSlot}) {
   const completed = slot.progress.completed;
   const progressLabel = completed === null
     ? humanize(slot.progress.state)
@@ -103,9 +108,9 @@ function VaultSlotCard({slot}: {slot: VaultSlot}) {
 
       <RewardDisplay reward={slot.reward} requirement={slot.requirement.label} />
 
-      {slot.items.length > 0 ? (
+      {showItems && slot.items.length > 0 ? (
         <ProgressItemList items={slot.items} />
-      ) : (
+      ) : showItems && (
         <p className="mt-3 text-xs text-neutral-600">No qualifying progress items.</p>
       )}
     </article>
@@ -131,36 +136,84 @@ function RewardDisplay({reward, requirement}: {reward: VaultSlot["reward"]; requ
   );
 }
 
-function ProgressItemList({items}: {items: ProgressItem[]}) {
+function ProgressItemList({compact = false, items}: {compact?: boolean; items: ProgressItem[]}) {
   return (
     <div className="mt-3 grid min-w-0 gap-2" role="list">
-      {items.map((item) => <ProgressItemView item={item} key={item.id} />)}
+      {items.map((item) => <ProgressItemView compact={compact} item={item} key={item.id} />)}
     </div>
   );
 }
 
-function ProgressItemView({item}: {item: ProgressItem}) {
+function ProgressItemView({compact, item}: {compact: boolean; item: ProgressItem}) {
   const style = stateStyle(item.state);
-  const dimensions = item.progress?.dimensions ?? [];
-  const tooltip = item.tooltip ?? (dimensions.length > 0 ? dimensionsTooltip(item.label, dimensions) : null);
+  const dimensions = uniqueDimensions(item.progress?.dimensions ?? []);
+  const tooltip = itemTooltip(item, dimensions);
   const itemRarity = item.rarity ? ` · ${humanize(item.rarity)}` : "";
+  const displayLabel = compact ? compactLabel(item.label) : item.label;
 
   return (
     <Tooltip message={tooltip ? <StructuredTooltip tooltip={tooltip} /> : null} role="listitem">
-      <div className={`min-w-0 rounded-md border px-2.5 py-2 ${style}`} aria-label={`${item.label}, ${humanize(item.state)}${itemRarity}`} data-item-id={item.id}>
+      <div className={`min-w-0 rounded-md border ${compact ? "flex h-8 items-center justify-center px-2" : "px-2.5 py-2"} ${style}`} aria-label={`${item.label}, ${humanize(item.state)}${itemRarity}`} data-item-id={item.id}>
         <div className="flex min-w-0 items-start justify-between gap-2">
-          <span className="min-w-0 truncate text-sm text-neutral-200" title={item.label}>{item.label}</span>
-          <span className="shrink-0 text-[10px] uppercase tracking-[0.08em] text-neutral-500">{humanize(item.state)}</span>
+          <span className={`${compact ? "text-xs font-semibold" : "min-w-0 truncate text-sm"} text-neutral-200`} title={item.label}>{displayLabel}</span>
+          {!compact && <span className="shrink-0 text-[10px] uppercase tracking-[0.08em] text-neutral-500">{humanize(item.state)}</span>}
         </div>
-        {(item.itemLevel !== undefined && item.itemLevel !== null || item.rarity) && <div className="mt-1 text-[11px] text-neutral-500">
+        {!compact && (item.itemLevel !== undefined && item.itemLevel !== null || item.rarity) && <div className="mt-1 text-[11px] text-neutral-500">
           {item.itemLevel !== undefined && item.itemLevel !== null && <span>Item level {item.itemLevel}</span>}
           {item.itemLevel !== undefined && item.itemLevel !== null && item.rarity && <span> · </span>}
           {item.rarity && <span>{humanize(item.rarity)}</span>}
         </div>}
-        {dimensions.length > 0 && <DimensionList dimensions={dimensions} />}
+        {!compact && dimensions.length > 0 && <DimensionList dimensions={dimensions} />}
       </div>
     </Tooltip>
   );
+}
+
+function sectionItems(section: VaultSection): ProgressItem[] {
+  const items = section.slots.flatMap((slot) => slot.items).concat(section.additionalItems);
+  return [...new Map(items.map((item) => [item.id, item])).values()];
+}
+
+function uniqueDimensions(dimensions: ProgressDimension[]): ProgressDimension[] {
+  const unique = new Map<string, ProgressDimension>();
+  for (const dimension of dimensions) {
+    const key = dimension.id.toLowerCase();
+    const previous = unique.get(key);
+    if (!previous || isComplete(dimension) && !isComplete(previous)) {
+      unique.set(key, dimension);
+    }
+  }
+  return [...unique.values()];
+}
+
+function isComplete(dimension: ProgressDimension): boolean {
+  return dimension.completed === true || dimension.state.toLowerCase() === "complete";
+}
+
+function compactLabel(label: string): string {
+  const words = label
+    .split(/\s+/)
+    .map((word) => word.replace(/[^a-z0-9]/gi, ""))
+    .filter((word) => word.length > 0 && !["a", "an", "and", "of", "the"].includes(word.toLowerCase()));
+
+  if (words.length === 0) {
+    return label.slice(0, 3).toUpperCase();
+  }
+  if (words.length === 1) {
+    return words[0].slice(0, 3).toUpperCase();
+  }
+  return words.map((word) => word[0]).join("").toUpperCase();
+}
+
+function itemTooltip(item: ProgressItem, dimensions: ProgressDimension[]): ApiTooltip | null {
+  if (item.tooltip?.rows.length) {
+    return item.tooltip;
+  }
+  if (dimensions.length > 0) {
+    const generated = dimensionsTooltip(item.label, dimensions);
+    return item.tooltip ? { ...item.tooltip, rows: generated.rows } : generated;
+  }
+  return item.tooltip ?? null;
 }
 
 function DimensionList({dimensions}: {dimensions: ProgressDimension[]}) {

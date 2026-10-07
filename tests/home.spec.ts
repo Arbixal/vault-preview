@@ -49,6 +49,9 @@ const versionedCharacterFixture = {
               progress: {
                 dimensions: [
                   { id: "heroic", label: "Heroic", state: "complete", completed: true },
+                  { id: "lfr", label: "Raid Finder", state: "incomplete", completed: false },
+                  { id: "heroic", label: "Heroic", state: "complete", completed: true },
+                  { id: "lfr", label: "Raid Finder", state: "incomplete", completed: false },
                 ],
               },
               tooltip: { title: "Nek'zali the Soulcoiler", rows: [] },
@@ -183,15 +186,15 @@ test("renders Season 2 character progress from a static export", async ({ page }
   await expect(page.getByText("Weekly completions", { exact: true })).toBeVisible();
   await expect(page.getByText("NW", { exact: true })).toBeVisible();
   await expect(page.getByText("Temple of Sethraliss", { exact: true })).toBeAttached();
-  await expect(page.getByText("Heroic", { exact: true }).first()).toBeVisible();
   await expect(page.getByText("6 bosses", { exact: true })).toBeVisible();
   await expect(page.getByText("4 runs", { exact: true })).toBeVisible();
   await expect(page.getByText("2 delves", { exact: true })).toBeVisible();
-  await expect(page.locator('[role="list"]').first().locator(':scope > [role="listitem"]')).toHaveCount(3);
+  await expect(page.getByTestId("raid-progress").locator('[role="list"]').locator(':scope > [role="listitem"]')).toHaveCount(3);
 
   const encounter = page.locator("[aria-describedby]").first();
   await encounter.focus();
   await expect(page.locator('[role="tooltip"]').first()).toBeVisible();
+  await expect(page.locator('[role="tooltip"]').first().getByText("Heroic", { exact: true })).toHaveCount(1);
 });
 
 test("renders the character card at a mobile viewport", async ({ page }) => {
