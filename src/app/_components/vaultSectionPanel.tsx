@@ -146,8 +146,8 @@ function ProgressItemView({item}: {item: ProgressItem}) {
   const itemRarity = item.rarity ? ` · ${humanize(item.rarity)}` : "";
 
   return (
-    <Tooltip message={tooltip ? <StructuredTooltip tooltip={tooltip} /> : null}>
-      <div className={`min-w-0 rounded-md border px-2.5 py-2 ${style}`} aria-label={`${item.label}, ${humanize(item.state)}${itemRarity}`} data-item-id={item.id} role="listitem">
+    <Tooltip message={tooltip ? <StructuredTooltip tooltip={tooltip} /> : null} role="listitem">
+      <div className={`min-w-0 rounded-md border px-2.5 py-2 ${style}`} aria-label={`${item.label}, ${humanize(item.state)}${itemRarity}`} data-item-id={item.id}>
         <div className="flex min-w-0 items-start justify-between gap-2">
           <span className="min-w-0 truncate text-sm text-neutral-200" title={item.label}>{item.label}</span>
           <span className="shrink-0 text-[10px] uppercase tracking-[0.08em] text-neutral-500">{humanize(item.state)}</span>

@@ -187,6 +187,7 @@ test("renders Season 2 character progress from a static export", async ({ page }
   await expect(page.getByText("6 bosses", { exact: true })).toBeVisible();
   await expect(page.getByText("4 runs", { exact: true })).toBeVisible();
   await expect(page.getByText("2 delves", { exact: true })).toBeVisible();
+  await expect(page.locator('[role="list"]').first().locator(':scope > [role="listitem"]')).toHaveCount(3);
 
   const encounter = page.locator("[aria-describedby]").first();
   await encounter.focus();
