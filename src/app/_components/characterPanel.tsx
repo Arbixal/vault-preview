@@ -32,6 +32,7 @@ export default function CharacterPanel({character, onRemove} : ICharacterPanelPr
   const displayedRealm = data?.character.realm ?? character.realm;
 
   const classColour = safeClassColour(data?.character.class);
+  const sectionAccent = `border-${classColour}/50`;
 
     return (
         <article className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-950 font-sans shadow-xl shadow-black/20" data-testid="character-card">
@@ -46,10 +47,6 @@ export default function CharacterPanel({character, onRemove} : ICharacterPanelPr
                   <span>{displayedRealm}</span>
                   {data?.season && <span className="rounded-full border border-neutral-700 px-2 py-0.5 text-neutral-400">{data.season.shortLabel}</span>}
                 </div>
-                {data?.season && <div className="mt-2 max-w-full text-[11px] text-neutral-600" data-testid="season-snapshot">
-                  <div>{data.season.displayName} · revision {data.season.revision}</div>
-                  <div className="break-all" title={data.season.revisionHash}>hash {data.season.revisionHash}</div>
-                </div>}
               </div>
             </div>
             {onRemove && <button className="grid size-8 shrink-0 place-items-center rounded-lg border border-neutral-800 text-neutral-500 transition hover:border-red-400/60 hover:text-red-300 focus:outline-none focus:ring-2 focus:ring-neutral-500" type="button" aria-label={`Remove ${displayedName} ${displayedRealm} ${displayedRegion.toUpperCase()}`} onClick={onRemove}>
@@ -60,7 +57,7 @@ export default function CharacterPanel({character, onRemove} : ICharacterPanelPr
           <div className="space-y-3 p-3 sm:p-4">
             {error ? <MessagePanel isRetrying={isValidating} message={errorMessage(error, "Unable to load data for this character. Try again in a moment.")} onRetry={() => { void mutate(); }} /> : data ? <>
               {data.sections.length > 0
-                ? data.sections.map((section, index) => <VaultSectionPanel key={`${section.id}-${index}`} section={section} />)
+                ? data.sections.map((section, index) => <VaultSectionPanel accentClass={sectionAccent} key={`${section.id}-${index}`} section={section} />)
                 : <p className="rounded-lg border border-dashed border-neutral-800 px-3 py-5 text-center text-sm text-neutral-600">No progress sections are available.</p>}
               {data.progressPeriod && <p className="text-[11px] text-neutral-600" data-testid="progress-period">
                 Reset {data.progressPeriod.resetAt} · As of {data.progressPeriod.asOf}
