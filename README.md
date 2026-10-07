@@ -75,7 +75,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The Playwright configuration starts a static server, builds the site when needed, and routes the API request to the checked-in Season 2 fixture. The tests do not depend on production character data.
+The Playwright configuration starts a static server, builds the site when needed, and routes API requests to deterministic test fixtures. The tests do not depend on production character data.
 
 ## Production Environment
 
@@ -97,29 +97,11 @@ The development API must allow requests from:
 http://localhost:3000
 ```
 
-## Midnight Season 2 Data
+## Runtime API Data
 
-Midnight Season 2 is represented by API season `18`.
+The active season and character progress are supplied by the versioned API at runtime. Season rules, activity definitions, thresholds, reward item levels, rarity, encounter ordering, and tooltip content are API-owned; the frontend renders the returned sections, slots, and progress items generically.
 
-Season mappings are maintained in `src/app/seasonData.ts`. The current data includes:
-
-- Midnight Season 2 Great Vault item-level mappings.
-- Venomous Abyss raid encounters.
-- Tidebound Grotto and Nymrissa Wavecaller.
-- Season 2 Mythic+ breakpoints.
-- Season 2 Delve breakpoints.
-- Separate gear-track rarity thresholds.
-
-The versioned API models and runtime response validation live in `src/app/api.ts`. The checked-in Season 2 fixture remains covered by `src/app/season2Api.test.ts` while the normalized contract fixtures are owned by the API repository.
-
-Primary data references:
-
-- [Blizzard: Midnight Season 2 is Now Live](https://news.blizzard.com/en-us/article/24294369/midnight-season-2-is-now-live)
-- [Blizzard: The Venomous Abyss](https://worldofwarcraft.blizzard.com/news/24294062/curse-of-ulatek-the-venomous-abyss-raid-finder-wing-3-now-live)
-- [Icy Veins: Great Vault](https://www.icy-veins.com/wow/great-vault-guide)
-- [Icy Veins: Midnight Mythic+ Season 2](https://www.icy-veins.com/wow/midnight-mythic-season-2-guide)
-- [Icy Veins: Venomous Abyss](https://www.icy-veins.com/wow/venomous-abyss-raid-guide)
-- [Icy Veins: Midnight Delves](https://www.icy-veins.com/wow/delves-guide)
+The frontend does not contain season mappings or game-specific breakpoint calculations. Contract fixtures and response validation live in `src/app/api.test.ts` and the API repository.
 
 ## CI and Deployment
 
@@ -161,11 +143,8 @@ Do not remove old S3 objects manually as part of a rollback. The AWS deployment 
 - `src/app/page.tsx`: character entry and saved-character UI.
 - `src/app/api.ts`: versioned API models, fetchers, and runtime validation.
 - `src/app/_components/vaultSectionPanel.tsx`: generic section, slot, progress-item, reward, and tooltip renderer.
-- `src/app/_components/`: raid, Mythic+, Delve, and shared UI components.
-- `src/app/seasonData.ts`: season mappings and encounter metadata.
-- `src/app/season2Character.fixture.json`: sanitized Season 2 API fixture.
-- `src/app/seasonData.test.ts`: seasonal mapping tests.
-- `src/app/season2Api.test.ts`: Season 2 API-shape tests.
+- `src/app/_components/`: generic section and shared UI components.
+- `src/app/api.test.ts`: versioned API contract and validation tests.
 - `tests/home.spec.ts`: static-site browser smoke tests.
 - `public/`: static assets copied into the export.
 - `out/`: generated static deployment artifact; ignored by Git.

@@ -1,15 +1,13 @@
 import { expect, test, type Page } from "@playwright/test";
-import season2Fixture from "../src/app/season2Character.fixture.json";
 
 const appConfigFixture = {
   schemaVersion: 1,
   activeSeason: {
-    id: "midnight-s2",
-    displayName: "Midnight Season 2",
-    shortLabel: "Season 2",
-    expansion: "Midnight",
-    sourceSeasonId: 18,
-    revision: "midnight-s2-r1",
+    id: "configured-season",
+    displayName: "Configured Season",
+    shortLabel: "Configured Season",
+    expansion: "Test Expansion",
+    revision: "configured-season-r1",
     revisionHash: "sha256:0000000000000000000000000000000000000000000000000000000000000000",
   },
 };
@@ -30,11 +28,11 @@ const fixtureRaidItems = [
         { id: "mythic", label: "Mythic", state: "incomplete", completed: false },
       ],
     },
-    tooltip: { title: "Nek'zali the Soulcoiler", rows: [] },
+    tooltip: { title: "Encounter Alpha", rows: [] },
   },
   {
     id: "wow:journal-encounter:2",
-    label: "NW",
+    label: "B",
     state: "complete",
     itemLevel: 318,
     rarity: "legendary",
@@ -43,7 +41,7 @@ const fixtureRaidItems = [
         { id: "heroic", label: "Heroic", state: "complete", completed: true },
       ],
     },
-    tooltip: { title: "Nymrissa Wavecaller", rows: [] },
+    tooltip: { title: "Encounter Beta", rows: [] },
   },
   {
     id: "wow:journal-encounter:3",
@@ -56,14 +54,19 @@ const fixtureRaidItems = [
         { id: "normal", label: "Normal", state: "complete", completed: true },
       ],
     },
-    tooltip: { title: "Ula'tek", rows: [] },
+    tooltip: { title: "Encounter Gamma", rows: [] },
   },
   { id: "wow:journal-encounter:4", label: "LE", state: "incomplete", progress: { dimensions: [] } },
   { id: "wow:journal-encounter:5", label: "SSZ", state: "incomplete", progress: { dimensions: [] } },
   { id: "wow:journal-encounter:6", label: "TF", state: "incomplete", progress: { dimensions: [] } },
 ];
 
-const fixtureMythicPlusItems = season2Fixture["season2-test-character"].dungeons.map((run, index) => ({
+const fixtureMythicPlusItems = [
+  { name: "Dungeon Alpha", level: 7 },
+  { name: "Dungeon Beta", level: 4 },
+  { name: "Dungeon Gamma", level: 4 },
+  { name: "Dungeon Delta", level: 4 },
+].map((run, index) => ({
   id: `raiderio:run:${index + 1}`,
   label: `${run.name} +${run.level}`,
   state: "complete",
@@ -216,11 +219,11 @@ async function addCharacter(page: Page, region: string, realm: string, name: str
   await page.getByRole("button", { name: "Add character", exact: true }).click();
 }
 
-test("renders Season 2 character progress from a static export", async ({ page }) => {
+test("renders configured character progress from a static export", async ({ page }) => {
   await addFixtureCharacter(page);
 
   await expect(page.getByRole("heading", { name: "bixposter" })).toBeVisible();
-  await expect(page.getByTestId("character-card").getByText("Season 2", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("character-card").getByText("Configured Season", { exact: true })).toBeVisible();
   await expect(page.getByTestId("progress-period")).toContainText("2026-09-16T03:00:00Z");
   await expect(page.getByText("Raids", { exact: true })).toBeVisible();
   await expect(page.getByText("Mythic+", { exact: true })).toBeVisible();
@@ -231,9 +234,9 @@ test("renders Season 2 character progress from a static export", async ({ page }
   await expect(page.getByText("Vault slots", { exact: true })).toBeVisible();
   await expect(page.getByText("Weekly runs", { exact: true })).toBeVisible();
   await expect(page.getByText("Weekly completions", { exact: true })).toBeVisible();
-  await expect(page.getByText("NW", { exact: true })).toBeVisible();
-  await expect(page.getByTestId("mythic-plus-progress").getByTitle("Temple of Sethraliss +7")).toBeVisible();
-  await expect(page.getByText("Temple of Sethraliss", { exact: true })).toBeAttached();
+  await expect(page.getByText("B", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("mythic-plus-progress").getByTitle("Dungeon Alpha +7")).toBeVisible();
+  await expect(page.getByText("Dungeon Alpha", { exact: true })).toBeAttached();
   await expect(page.getByText("6 bosses", { exact: true })).toBeVisible();
   await expect(page.getByText("4 runs", { exact: true })).toBeVisible();
   await expect(page.getByText("2 delves", { exact: true })).toBeVisible();
