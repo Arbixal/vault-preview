@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Great Vault Preview",
-  description: "Track World of Warcraft Midnight Great Vault progress across raids, Mythic+, and Delves.",
+  description: "Track Great Vault progress across raids, Mythic+, Delves, and more.",
 };
 
 export default function RootLayout({
