@@ -160,7 +160,7 @@ Do not remove old S3 objects manually as part of a rollback. The AWS deployment 
 
 - `src/app/page.tsx`: character entry and saved-character UI.
 - `src/app/api.ts`: versioned API models, fetchers, and runtime validation.
-- `src/app/legacyProgressAdapter.ts`: temporary bridge to the existing activity panels during the generic renderer migration.
+- `src/app/_components/vaultSectionPanel.tsx`: generic section, slot, progress-item, reward, and tooltip renderer.
 - `src/app/_components/`: raid, Mythic+, Delve, and shared UI components.
 - `src/app/seasonData.ts`: season mappings and encounter metadata.
 - `src/app/season2Character.fixture.json`: sanitized Season 2 API fixture.

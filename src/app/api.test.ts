@@ -117,6 +117,19 @@ describe("versioned API data layer", () => {
     expect(() => parseCharacterProgressResponse(malformed)).toThrow(ApiValidationError);
   });
 
+  it("treats omitted empty reward fields as an empty reward", () => {
+    const fixture = characterFixture();
+    const response = parseCharacterProgressResponse({
+      ...fixture,
+      sections: fixture.sections.map((section) => ({
+        ...section,
+        slots: section.slots.map((slot) => ({ ...slot, reward: {} })),
+      })),
+    });
+
+    expect(response.sections[0].slots[0].reward).toEqual({ itemLevel: null, rarity: null });
+  });
+
   it("turns structured HTTP errors into typed API errors", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({
       schemaVersion: 1,

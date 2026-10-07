@@ -98,6 +98,10 @@ const versionedCharacterFixture = {
             label: `${run.name} +${run.level}`,
             state: "complete",
             progress: { value: run.level },
+            tooltip: {
+              title: run.name,
+              rows: [{ label: "Mythic level", value: `+${run.level}` }],
+            },
           })),
         },
       ],
@@ -174,15 +178,15 @@ test("renders Season 2 character progress from a static export", async ({ page }
   await expect(page.getByText("Raids", { exact: true })).toBeVisible();
   await expect(page.getByText("Mythic+", { exact: true })).toBeVisible();
   await expect(page.getByText("Delves", { exact: true })).toBeVisible();
-  await expect(page.getByText("Vault tiers", { exact: true })).toHaveCount(3);
+  await expect(page.getByText("Vault slots", { exact: true })).toBeVisible();
+  await expect(page.getByText("Weekly runs", { exact: true })).toBeVisible();
+  await expect(page.getByText("Weekly completions", { exact: true })).toBeVisible();
   await expect(page.getByText("NW", { exact: true })).toBeVisible();
   await expect(page.getByText("Temple of Sethraliss", { exact: true })).toBeAttached();
-  await expect(page.getByText("2 bosses", { exact: true })).toBeVisible();
+  await expect(page.getByText("Heroic", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("6 bosses", { exact: true })).toBeVisible();
   await expect(page.getByText("4 runs", { exact: true })).toBeVisible();
-  await expect(page.getByText("8 delves", { exact: true })).toBeVisible();
-  await expect(page.getByText("Need 6 bosses", { exact: true })).toBeVisible();
-  await expect(page.getByText("Need 8 runs", { exact: true })).toBeVisible();
-  await expect(page.getByText("Need 2 delves", { exact: true })).toBeVisible();
+  await expect(page.getByText("2 delves", { exact: true })).toBeVisible();
 
   const encounter = page.locator("[aria-describedby]").first();
   await encounter.focus();
@@ -195,6 +199,60 @@ test("renders the character card at a mobile viewport", async ({ page }) => {
 
   await expect(page.getByRole("heading", { name: "bixposter" })).toBeVisible();
   await expect(page.getByText("Raids", { exact: true })).toBeVisible();
+});
+
+test("renders unknown activities and rarity values through the generic path", async ({ page }) => {
+  await routeAppConfig(page);
+  await page.route("**/v1/vault-progress/us/nagrand/bixposter", async (route) => {
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        ...versionedCharacterFixture,
+        sections: [{
+          id: "future-activity",
+          title: "Future Activity",
+          subtitle: null,
+          kind: "future-account-activity",
+          status: "future-status",
+          freshness: "future-freshness",
+          slots: [
+            {
+              id: "future-slot-3",
+              requirement: { unit: "events", required: 3, label: "3 events" },
+              progress: { completed: 1, state: "future-progress-state" },
+              reward: { itemLevel: null, rarity: "future-rarity" },
+              items: [{
+                id: "future:event:1",
+                label: "Future event",
+                state: "future-item-state",
+                progress: { value: 1 },
+                tooltip: { title: "Future event", rows: [{ label: "Status", value: "Open" }] },
+              }],
+            },
+            {
+              id: "future-slot-5",
+              requirement: { unit: "events", required: 5, label: "5 events" },
+              progress: { completed: 1, state: "future-progress-state" },
+              reward: { itemLevel: null, rarity: "future-rarity" },
+              items: [],
+            },
+          ],
+          additionalItems: [],
+        }],
+      }),
+    });
+  });
+
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Add character", exact: true })).toBeEnabled();
+  await addCharacter(page, "us", "nagrand", "bixposter");
+
+  await expect(page.getByText("Future Activity", { exact: true })).toBeVisible();
+  await expect(page.getByText("3 events", { exact: true })).toBeVisible();
+  await expect(page.getByText("5 events", { exact: true })).toBeVisible();
+  await expect(page.getByTitle("Future event")).toBeVisible();
+  await expect(page.locator('[data-rarity="future-rarity"]')).toHaveCount(2);
+  await expect(page.locator('[data-rarity="future-rarity"]').first()).toHaveClass(/border-neutral-700/);
 });
 
 test("keeps the character snapshot when active configuration changes", async ({ page }) => {
@@ -313,10 +371,10 @@ test("renders multiple characters and removes only the selected region", async (
   await addCharacter(page, "us", "nagrand", "bixposter");
   await addCharacter(page, "eu", "nagrand", "bixposter");
 
-  await expect(page.locator("article")).toHaveCount(2);
+  await expect(page.getByTestId("character-card")).toHaveCount(2);
   await expect(page.getByRole("heading", { name: "bixposter" })).toHaveCount(2);
-  const firstCard = await page.locator("article").nth(0).boundingBox();
-  const secondCard = await page.locator("article").nth(1).boundingBox();
+  const firstCard = await page.getByTestId("character-card").nth(0).boundingBox();
+  const secondCard = await page.getByTestId("character-card").nth(1).boundingBox();
   expect(firstCard).not.toBeNull();
   expect(secondCard).not.toBeNull();
   expect(secondCard!.x).toBeGreaterThan(firstCard!.x);
@@ -324,9 +382,9 @@ test("renders multiple characters and removes only the selected region", async (
 
   await page.getByRole("button", { name: "Remove bixposter nagrand US" }).click();
 
-  await expect(page.locator("article")).toHaveCount(1);
-  await expect(page.locator("article").getByText("EU", { exact: true })).toBeVisible();
-  await expect(page.locator("article").getByText("US", { exact: true })).toHaveCount(0);
+  await expect(page.getByTestId("character-card")).toHaveCount(1);
+  await expect(page.getByTestId("character-card").getByText("EU", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("character-card").getByText("US", { exact: true })).toHaveCount(0);
   const savedCharacters = await page.evaluate(() => localStorage.getItem("characters"));
   expect(savedCharacters).toBe(JSON.stringify([
     { region: "eu", realm: "nagrand", name: "bixposter" },
