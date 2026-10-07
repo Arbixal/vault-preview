@@ -1,7 +1,10 @@
 "use client"
 
 import { useState, useEffect, FormEvent } from "react";
+import useSWR from "swr";
 import CharacterPanel, { Character } from "./_components/characterPanel";
+import MessagePanel from "./_components/messagePanel";
+import { appConfigUrl, errorMessage, fetchAppConfig } from "./api";
 
 function characterKey(character: Character): string {
   return `${character.region}-${character.realm}-${character.name}`;
@@ -54,6 +57,10 @@ export default function Home() {
   const [formError, setFormError] = useState("");
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
+  const {data: appConfig, error: appConfigError, isLoading: isAppConfigLoading, isValidating: isAppConfigValidating, mutate: retryAppConfig} = useSWR(
+    appConfigUrl,
+    () => fetchAppConfig(),
+  );
 
   useEffect(() => {
     try {
@@ -70,6 +77,9 @@ export default function Home() {
     }
   }, [])
 
+  const activeSeason = appConfig?.activeSeason;
+  const seasonSummary = activeSeason?.displayName ?? (isAppConfigLoading ? "Loading active season..." : "Season unavailable");
+
   return (
     <main className="min-h-screen bg-neutral-950 px-4 py-6 text-neutral-100 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-7xl flex-col">
@@ -81,8 +91,16 @@ export default function Home() {
               <div className="text-[11px] uppercase tracking-[0.12em] text-neutral-500">Azeroth progression desk</div>
             </div>
           </div>
-          <div className="hidden rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-xs uppercase tracking-[0.08em] text-neutral-400 sm:block">Midnight · Season 2</div>
+          <div className="hidden rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-xs uppercase tracking-[0.08em] text-neutral-400 sm:block">{seasonSummary}</div>
         </header>
+
+        {appConfigError && <div className="mt-5">
+          <MessagePanel
+            isRetrying={isAppConfigValidating}
+            message={errorMessage(appConfigError, "Unable to load the active season configuration.")}
+            onRetry={() => { void retryAppConfig(); }}
+          />
+        </div>}
 
         <section className="grid items-center gap-6 py-10 md:grid-cols-[1fr_220px] lg:py-12">
           <div>
@@ -92,9 +110,9 @@ export default function Home() {
           </div>
           <div className="rounded-xl border border-neutral-800 bg-neutral-900/80 p-4 shadow-xl shadow-black/20">
             <div className="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Live data set</div>
-            <strong className="mt-1 block text-2xl font-black tracking-[-0.05em] text-amber-300">Season 2</strong>
-            <small className="block text-neutral-500">Midnight · API season 18</small>
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-neutral-700 px-2.5 py-1 text-[11px] text-neutral-300"><span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_#34d399]" /> API online</div>
+            <strong className="mt-1 block text-2xl font-black tracking-[-0.05em] text-amber-300">{activeSeason?.shortLabel ?? (isAppConfigLoading ? "Loading..." : "Unavailable")}</strong>
+            <small className="block text-neutral-500">{activeSeason ? `${activeSeason.expansion} · ${activeSeason.id}` : "Runtime configuration"}</small>
+            <div className={`mt-3 inline-flex items-center gap-2 rounded-full border border-neutral-700 px-2.5 py-1 text-[11px] text-neutral-300`}><span className={`size-1.5 rounded-full ${activeSeason ? "bg-emerald-400 shadow-[0_0_12px_#34d399]" : "bg-amber-400"}`} /> {activeSeason ? "API online" : "API unavailable"}</div>
           </div>
         </section>
 

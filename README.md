@@ -1,6 +1,6 @@
 # Vault Preview
 
-Vault Preview is a Next.js static-export application for viewing World of Warcraft Great Vault progress. Character progress is loaded from the configured `vault-progress` API at runtime in the browser.
+Vault Preview is a Next.js static-export application for viewing World of Warcraft Great Vault progress. Active season configuration and character progress are loaded from the configured versioned API at runtime in the browser.
 
 ## Requirements
 
@@ -110,7 +110,7 @@ Season mappings are maintained in `src/app/seasonData.ts`. The current data incl
 - Season 2 Delve breakpoints.
 - Separate gear-track rarity thresholds.
 
-The live API contract is represented by `src/app/season2Character.fixture.json` and covered by `src/app/season2Api.test.ts`.
+The versioned API models and runtime response validation live in `src/app/api.ts`. The checked-in Season 2 fixture remains covered by `src/app/season2Api.test.ts` while the normalized contract fixtures are owned by the API repository.
 
 Primary data references:
 
@@ -159,6 +159,8 @@ Do not remove old S3 objects manually as part of a rollback. The AWS deployment 
 ## Project Structure
 
 - `src/app/page.tsx`: character entry and saved-character UI.
+- `src/app/api.ts`: versioned API models, fetchers, and runtime validation.
+- `src/app/legacyProgressAdapter.ts`: temporary bridge to the existing activity panels during the generic renderer migration.
 - `src/app/_components/`: raid, Mythic+, Delve, and shared UI components.
 - `src/app/seasonData.ts`: season mappings and encounter metadata.
 - `src/app/season2Character.fixture.json`: sanitized Season 2 API fixture.
