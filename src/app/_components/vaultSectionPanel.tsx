@@ -11,6 +11,7 @@ import type {
 
 interface VaultSectionPanelProps {
   section: VaultSection;
+  accentClass?: string;
 }
 
 const RARITY_STYLES: Record<string, { border: string; text: string }> = {
@@ -30,7 +31,7 @@ const STATE_STYLES: Record<string, string> = {
   unknown: "border-neutral-700 bg-neutral-900/70",
 };
 
-export default function VaultSectionPanel({section}: VaultSectionPanelProps) {
+export default function VaultSectionPanel({accentClass = "border-neutral-600", section}: VaultSectionPanelProps) {
   const status = section.status.toLowerCase();
   const freshness = section.freshness.toLowerCase();
   const statusIsKnown = status === "available" || status === "empty" || status === "unavailable" || status === "unsupported";
@@ -45,7 +46,7 @@ export default function VaultSectionPanel({section}: VaultSectionPanelProps) {
     <section className="rounded-xl border border-neutral-800/80 bg-neutral-900/30 p-3" data-testid={`vault-section-${section.id}`}>
       <header className="mb-3 flex flex-wrap items-start justify-between gap-3 border-b border-neutral-800/80 pb-2">
         <div>
-          <h3 className="border-l-2 border-neutral-600 pl-2 text-sm font-semibold uppercase tracking-[0.12em] text-neutral-300">{section.title}</h3>
+          <h3 className={`border-l-2 ${accentClass} pl-2 text-sm font-semibold uppercase tracking-[0.12em] text-neutral-300`}>{section.title}</h3>
           {showSubtitle && <p className="mt-1 pl-2 text-xs text-neutral-600">{section.subtitle}</p>}
         </div>
         <div className="flex flex-wrap justify-end gap-1.5 text-[10px] uppercase tracking-[0.08em]">

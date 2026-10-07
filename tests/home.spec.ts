@@ -220,11 +220,14 @@ test("renders Season 2 character progress from a static export", async ({ page }
   await addFixtureCharacter(page);
 
   await expect(page.getByRole("heading", { name: "bixposter" })).toBeVisible();
-  await expect(page.getByTestId("season-snapshot")).toContainText("midnight-s2-r1");
+  await expect(page.getByTestId("character-card").getByText("Season 2", { exact: true })).toBeVisible();
   await expect(page.getByTestId("progress-period")).toContainText("2026-09-16T03:00:00Z");
   await expect(page.getByText("Raids", { exact: true })).toBeVisible();
   await expect(page.getByText("Mythic+", { exact: true })).toBeVisible();
   await expect(page.getByText("Delves", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("vault-section-raid").locator("h3")).toHaveClass(/border-shaman\/50/);
+  await expect(page.getByTestId("vault-section-mythic-plus").locator("h3")).toHaveClass(/border-shaman\/50/);
+  await expect(page.getByTestId("vault-section-delves").locator("h3")).toHaveClass(/border-shaman\/50/);
   await expect(page.getByText("Vault slots", { exact: true })).toBeVisible();
   await expect(page.getByText("Weekly runs", { exact: true })).toBeVisible();
   await expect(page.getByText("Weekly completions", { exact: true })).toBeVisible();
@@ -317,7 +320,7 @@ test("renders unknown activities and rarity values through the generic path", as
   await expect(page.locator('[data-rarity="future-rarity"]').first()).toHaveClass(/border-neutral-700/);
 });
 
-test("keeps the character snapshot when active configuration changes", async ({ page }) => {
+test("keeps the character season label when active configuration changes", async ({ page }) => {
   await page.route("**/v1/app-config", async (route) => {
     await route.fulfill({
       contentType: "application/json",
@@ -354,10 +357,8 @@ test("keeps the character snapshot when active configuration changes", async ({ 
   await expect(page.getByRole("button", { name: "Add character", exact: true })).toBeEnabled();
   await addCharacter(page, "us", "nagrand", "bixposter");
 
-  await expect(page.getByText("Future Season", { exact: true })).toBeVisible();
-  await expect(page.getByTestId("season-snapshot")).toContainText("Previous Season");
-  await expect(page.getByTestId("season-snapshot")).toContainText("previous-season-r2");
-  await expect(page.getByTestId("season-snapshot")).toContainText("hash sha256:0000");
+  await expect(page.getByText("Season Future", { exact: true })).toBeVisible();
+  await expect(page.getByTestId("character-card").getByText("Season Previous", { exact: true })).toBeVisible();
 });
 
 test("preserves stale and unavailable section states", async ({ page }) => {
