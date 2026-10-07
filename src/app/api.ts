@@ -366,13 +366,15 @@ function parseReward(value: unknown, path: string): Reward {
   const record = objectAt(value, path);
   const rarity = record.rarity;
 
-  if (rarity !== null && typeof rarity !== "string") {
+  if (rarity !== undefined && rarity !== null && typeof rarity !== "string") {
     invalid(`${path}.rarity`, "expected a string or null");
   }
 
   return {
-    itemLevel: nullableInteger(record.itemLevel, `${path}.itemLevel`),
-    rarity: rarity as string | null,
+    itemLevel: record.itemLevel === undefined
+      ? null
+      : nullableInteger(record.itemLevel, `${path}.itemLevel`),
+    rarity: rarity === undefined ? null : rarity as string | null,
   };
 }
 
