@@ -36,6 +36,14 @@ The `NEXT_PUBLIC_API_ENDPOINT` value is embedded into the client bundle at build
 
 ## Validation Commands
 
+Fetch the pinned API-owned contract fixtures before running validation:
+
+```bash
+API_CONTRACT_REF="dd3214dabf5c5fbf8266f7f543ad01a0b4485304" npm run fixtures:fetch
+```
+
+The fetched files are written to `test/fixtures/vault-preview-v1/` and ignored by Git. Update the commit pin deliberately when the API contract or fixture set changes.
+
 Run linting:
 
 ```bash
@@ -101,7 +109,7 @@ http://localhost:3000
 
 The active season and character progress are supplied by the versioned API at runtime. Season rules, activity definitions, thresholds, reward item levels, rarity, encounter ordering, and tooltip content are API-owned; the frontend renders the returned sections, slots, and progress items generically.
 
-The frontend does not contain season mappings or game-specific breakpoint calculations. Contract fixtures and response validation live in `src/app/api.test.ts` and the API repository.
+The frontend does not contain season mappings or game-specific breakpoint calculations. Contract fixtures are fetched from the API repository for validation and browser tests; the parser lives in `src/app/api.ts`.
 
 ## CI and Deployment
 
