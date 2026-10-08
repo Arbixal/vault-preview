@@ -3,6 +3,9 @@
 
 name: Node.js CI
 
+env:
+  API_CONTRACT_REF: dd3214dabf5c5fbf8266f7f543ad01a0b4485304
+
 on:
   push:
     branches: [ master ]
@@ -26,6 +29,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - name: Fetch pinned API contract fixtures
+      run: npm run fixtures:fetch
     - run: npm ci
     - run: npm run lint
     - run: npm run typecheck
