@@ -14,6 +14,7 @@
     "fixtures:fetch": "bash scripts/fetch-contract-fixtures.sh",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "typecheck:compat": "tsc6 --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test"
   },
@@ -32,12 +33,13 @@
     "@types/node": "^26.6.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "eslint": "9.39.5",
-    "eslint-config-next": "16.3.5",
+    "@typescript/native": "npm:typescript@7.0.2",
+    "eslint": "10.12.0",
+    "eslint-config-next": "16.4.0",
     "postcss": "^8",
     "serve": "14.2.6",
     "tailwindcss": "4.3.3",
-    "typescript": "5.9.3",
+    "typescript": "npm:@typescript/typescript6@6.0.2",
     "vitest": "^5.0.1"
   }
 }
