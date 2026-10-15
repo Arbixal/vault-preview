@@ -39,8 +39,11 @@ export default function VaultSectionPanel({accentClass = "border-neutral-600", s
   const sectionKind = section.kind.toLowerCase();
   const isRaid = sectionKind === "raid";
   const isMythicPlus = sectionKind === "mythic-plus";
-  const hasCompactContributions = isRaid || isMythicPlus;
-  const contributionItems = hasCompactContributions ? sectionItems(section) : [];
+  const isDelves = sectionKind === "delves";
+  const hasCompactContributions = isRaid || isMythicPlus || isDelves;
+  const contributionItems = hasCompactContributions
+    ? isDelves ? delveContributionItems(section) : sectionItems(section)
+    : [];
 
   return (
     <section className="rounded-xl border border-neutral-800/80 bg-neutral-900/30 p-3" data-testid={`vault-section-${section.id}`}>
@@ -69,7 +72,7 @@ export default function VaultSectionPanel({accentClass = "border-neutral-600", s
         <p className="rounded-lg border border-dashed border-neutral-800 px-3 py-5 text-center text-sm text-neutral-600">No vault slots are available.</p>
       )}
 
-      {hasCompactContributions ? <ContributionSummary kind={isRaid ? "bosses" : "runs"} items={contributionItems} /> : section.additionalItems.length > 0 && <div className="mt-3 border-t border-neutral-800/80 pt-3">
+      {hasCompactContributions ? <ContributionSummary kind={isRaid ? "bosses" : isMythicPlus ? "runs" : "delves"} items={contributionItems} /> : section.additionalItems.length > 0 && <div className="mt-3 border-t border-neutral-800/80 pt-3">
         <h4 className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-neutral-600">Additional progress</h4>
         <ProgressItemList items={section.additionalItems} />
       </div>}
@@ -122,9 +125,8 @@ function VaultSlotCard({showItems, slot}: {showItems: boolean; slot: VaultSlot})
   );
 }
 
-function ContributionSummary({kind, items}: {kind: "bosses" | "runs"; items: ProgressItem[]}) {
-  const isRaid = kind === "bosses";
-  const testId = isRaid ? "raid-progress" : "mythic-plus-progress";
+function ContributionSummary({kind, items}: {kind: "bosses" | "runs" | "delves"; items: ProgressItem[]}) {
+  const testId = kind === "bosses" ? "raid-progress" : kind === "runs" ? "mythic-plus-progress" : "delves-progress";
 
   return (
     <div className="mt-3 border-t border-neutral-800/80 pt-3" data-testid={testId}>
@@ -194,6 +196,20 @@ function sectionItems(section: VaultSection): ProgressItem[] {
   return [...new Map(items.map((item) => [item.id, item])).values()];
 }
 
+function delveContributionItems(section: VaultSection): ProgressItem[] {
+  return sectionItems(section).flatMap((item) => {
+    const completed = item.progress?.completed;
+    if (!item.id.startsWith("wow:delve-level:") || typeof completed !== "number" || completed <= 1) {
+      return [item];
+    }
+
+    return Array.from({length: completed}, (_, index) => ({
+      ...item,
+      id: index === 0 ? item.id : `${item.id}:${index + 1}`,
+    }));
+  });
+}
+
 function uniqueDimensions(dimensions: ProgressDimension[]): ProgressDimension[] {
   const unique = new Map<string, ProgressDimension>();
   for (const dimension of dimensions) {
@@ -213,6 +229,16 @@ function isComplete(dimension: ProgressDimension): boolean {
 function compactLabel(item: ProgressItem): string {
   if (item.id.startsWith("raiderio:run:") && typeof item.progress?.value === "number") {
     return `+${item.progress.value}`;
+  }
+
+  if (item.id.startsWith("wow:delve-level:")) {
+    const value = item.progress?.value;
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return String(value);
+    }
+    if (typeof value === "string" && value.trim().length > 0) {
+      return value.trim();
+    }
   }
 
   const words = item.label
