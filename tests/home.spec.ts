@@ -79,6 +79,25 @@ const fixtureMythicPlusItems = [
   },
 }));
 
+const fixtureDelveItems = [
+  {
+    id: "wow:delve-level:8",
+    label: "Tier 8",
+    state: "complete",
+    itemLevel: 315,
+    rarity: "epic",
+    progress: { value: 8, completed: 2, required: 2 },
+  },
+  {
+    id: "wow:delve-level:7",
+    label: "Tier 7",
+    state: "complete",
+    itemLevel: 308,
+    rarity: "rare",
+    progress: { value: 7, completed: 1, required: 1 },
+  },
+];
+
 const versionedCharacterFixture = {
   schemaVersion: 1,
   character: {
@@ -162,18 +181,18 @@ const versionedCharacterFixture = {
       title: "Delves",
       subtitle: "Weekly completions",
       kind: "delves",
-      status: "empty",
+      status: "available",
       freshness: "fresh",
       slots: [
         {
           id: "delves-slot-2",
           requirement: { unit: "delves", required: 2, label: "2 delves" },
-          progress: { completed: 0, state: "incomplete" },
-          reward: { itemLevel: null, rarity: null },
-          items: [],
+          progress: { completed: 2, state: "complete" },
+          reward: { itemLevel: 315, rarity: "epic" },
+          items: fixtureDelveItems.slice(0, 1),
         },
       ],
-      additionalItems: [],
+      additionalItems: fixtureDelveItems.slice(1),
     },
   ],
 };
@@ -245,7 +264,12 @@ test("renders configured character progress from a static export", async ({ page
   await expect(page.getByTestId("vault-slot-progress-raid-slot-6")).toHaveText("3 / 6 bosses");
   await expect(page.getByTestId("raid-progress").locator('[role="list"]').locator(':scope > [role="listitem"]')).toHaveCount(6);
   await expect(page.getByTestId("mythic-plus-progress").locator('[role="list"]').locator(':scope > [role="listitem"]')).toHaveCount(4);
+  await expect(page.getByTestId("delves-progress").locator('[role="list"]').locator(':scope > [role="listitem"]')).toHaveCount(3);
+  await expect(page.getByTestId("delves-progress").locator('[data-item-id^="wow:delve-level:8"]')).toHaveCount(2);
+  await expect(page.getByTestId("delves-progress").locator('[data-item-id="wow:delve-level:7"]')).toHaveCount(1);
+  await expect(page.getByTestId("delves-progress").getByText("8", { exact: true })).toHaveCount(2);
   await expect(page.locator('[data-testid^="vault-slot-mythic-plus-"] [role="list"]')).toHaveCount(0);
+  await expect(page.locator('[data-testid^="vault-slot-delves-"] [role="list"]')).toHaveCount(0);
   await expect(page.getByTestId("raid-progress").locator('[data-item-id="wow:journal-encounter:1"]')).toHaveClass(/border-orange-500\/70/);
   await expect(page.getByTestId("mythic-plus-progress").locator('[data-item-id="raiderio:run:1"]')).toHaveClass(/border-fuchsia-500\/70/);
 
