@@ -5,104 +5,59 @@ import {
   fetchCharacterProgress,
   parseAppConfigResponse,
   parseCharacterProgressResponse,
+  type CharacterProgressResponse,
 } from "./api";
+import { contractManifest, readContractFixture } from "../../test/contract-fixtures";
 
-const revisionHash = "sha256:0000000000000000000000000000000000000000000000000000000000000000";
-
-function appConfigFixture() {
-  return {
-    schemaVersion: 1,
-    activeSeason: {
-      id: "active-season",
-      displayName: "Active Season",
-      shortLabel: "Season X",
-      expansion: "Expansion",
-      revision: "active-season-r1",
-      revisionHash,
-    },
-  };
-}
-
-function characterFixture() {
-  return {
-    schemaVersion: 1,
-    character: {
-      region: "us",
-      realm: "nagrand",
-      name: "bixposter",
-      class: "shaman",
-    },
-    season: {
-      id: "historical-season",
-      displayName: "Historical Season",
-      shortLabel: "Season H",
-      expansion: "Expansion",
-      revision: "historical-season-r4",
-      revisionHash,
-    },
-    progressPeriod: {
-      resetAt: "2026-09-15T15:00:00Z",
-      asOf: "2026-09-16T03:00:00Z",
-    },
-    futureOptionalMetadata: { source: "test" },
-    sections: [
-      {
-        id: "future-activity",
-        title: "Future Activity",
-        subtitle: null,
-        kind: "future-kind",
-        status: "future-status",
-        freshness: "future-freshness",
-        slots: [
-          {
-            id: "future-slot",
-            requirement: { unit: "events", required: 3, label: "3 events" },
-            progress: { completed: 1, state: "future-progress-state" },
-            reward: { itemLevel: null, rarity: "future-rarity" },
-            items: [
-              {
-                id: "future:item:1",
-                label: "Future item",
-                state: "future-item-state",
-                progress: {
-                  value: 1,
-                  completed: 1,
-                  required: 3,
-                  dimensions: [],
-                },
-                tooltip: {
-                  title: "Future item",
-                  rows: [{ label: "Progress", value: "1/3" }],
-                },
-              },
-            ],
-          },
-        ],
-        additionalItems: [],
-      },
-    ],
-  };
+function characterFixture(): CharacterProgressResponse {
+  return parseCharacterProgressResponse(readContractFixture("current-season"));
 }
 
 describe("versioned API data layer", () => {
-  it("validates and parses the runtime app configuration", () => {
-    const response = parseAppConfigResponse(appConfigFixture());
+  for (const fixture of contractManifest.fixtures) {
+    it(`parses the published ${fixture.name} fixture`, () => {
+      const value = readContractFixture(fixture.name);
 
-    expect(response.activeSeason.id).toBe("active-season");
-    expect(response.activeSeason.revisionHash).toBe(revisionHash);
+      if (fixture.responseType === "AppConfigResponse") {
+        expect(parseAppConfigResponse(value).schemaVersion).toBe(1);
+      } else if (fixture.responseType === "CharacterProgressResponse") {
+        expect(parseCharacterProgressResponse(value).schemaVersion).toBe(1);
+      } else if (fixture.responseType === "LegacyProgressResponse") {
+        expect(value).toMatchObject({
+          "bixposter-nagrand": {
+            raid: expect.any(Object),
+            dungeons: expect.any(Array),
+            delves: expect.any(Object),
+            season: expect.any(Number),
+          },
+        });
+      } else {
+        throw new Error(`Unsupported contract response type: ${fixture.responseType}`);
+      }
+    });
+  }
+
+  it("validates and parses the runtime app configuration", () => {
+    const response = parseAppConfigResponse(readContractFixture("app-config"));
+
+    expect(response.activeSeason.id).toBe("midnight-s2");
+    expect(response.activeSeason.revisionHash).toMatch(/^sha256:[0-9a-f]{64}$/);
   });
 
-  it("preserves a character's season snapshot independently from active config", () => {
-    const response = parseCharacterProgressResponse(characterFixture());
+  it("preserves future activity values and ignores additive response data", () => {
+    const currentSeason = readContractFixture("current-season");
+    const response = parseCharacterProgressResponse(readContractFixture("unknown-activity-kind"));
 
-    expect(response.season.id).toBe("historical-season");
-    expect(response.season.revision).toBe("historical-season-r4");
+    expect(response.season.id).toBe("midnight-s2");
     expect(response.progressPeriod).toEqual({
       resetAt: "2026-09-15T15:00:00Z",
-      asOf: "2026-09-16T03:00:00Z",
+      asOf: "2026-09-16T07:00:00Z",
     });
-    expect(response.sections[0].kind).toBe("future-kind");
-    expect(response.sections[0].slots[0].items[0].rarity).toBeUndefined();
+    expect(response.sections[0].kind).toBe("future-account-activity");
+    expect(response.sections[0].status).toBe("future-status");
+    expect(response.sections[0].slots[0].items[0].rarity).toBe("future-rarity");
+    expect(currentSeason).toHaveProperty("futureOptionalMetadata");
+    expect(parseCharacterProgressResponse(currentSeason)).not.toHaveProperty("futureOptionalMetadata");
   });
 
   it("rejects malformed versioned responses", () => {
